@@ -1,1 +1,1 @@
-# sertonin_LFP
+# serotonin_LFP
