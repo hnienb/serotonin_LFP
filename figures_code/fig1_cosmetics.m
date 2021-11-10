@@ -122,7 +122,7 @@ offset_axis(0.05, axPars)
 %%
 % second column
 % generate an panel
-p = uipanel('Units','centimeters', 'Position', [xbegin+figspace_x*1.5 ybegin+figspace_y sq*3 sq*3], 'BackgroundColor', 'white');
+p = uipanel('Units', 'centimeters', 'Position', [xbegin+figspace_x*1.5 ybegin+figspace_y*1.5 sq*4.5 sq*4.5], 'BackgroundColor', 'white');
 p.BorderType = 'None';
 
 % open figures
@@ -132,42 +132,132 @@ fig = openfig([figpath '/subplots/gain_change.fig'], 'invisible');
 axesObjs = get(fig, 'Children');
 
 % Copy the 'axis' into the new panel
-axesObjs(1).Parent = p;
+for i = 1:3
+    axesObjs(i).Parent = p;
+end
+
 
 % Manually fix the visual parameters for readability
-tile_plot = p.Children;
-tile_plot.XLabel.FontName = 'Arial';
-tile_plot.XLabel.FontSize = 6;
-tile_plot.YLabel.FontName = 'Arial';
-tile_plot.YLabel.FontSize = 6;
+gain_plot = p.Children;
+%gain_plot.XLabel.FontName = 'Arial';
+%gain_plot.XLabel.FontSize = 6;
+%gain_plot.YLabel.FontName = 'Arial';
+%gain_plot.YLabel.FontSize = 6;
 
 for i=1:3
-   tile_plot.Children(i).FontSize = 6;
-   tile_plot.Children(i).LineWidth = 0.5;
+   gain_plot(i).FontSize = 6;
+   gain_plot(i).LineWidth = 0.5;
 end
 
 % Central scatterplot
-tile_plot.Children(1).Children(1).FontSize = 6;
-tile_plot.Children(1).Children(4).FontSize = 6;
+gain_plot(3).Children(1).FontSize = 6;
+gain_plot(3).Children(4).FontSize = 6;
 
 % Right-side histogram
-tile_plot.Children(2).Children(1).FontSize = 6;
-tile_plot.Children(2).Children(3).FontSize = 6;
-tile_plot.Children(2).Children(3).Position(1) = tile_plot.Children(2).Children(3).Position(1) - 0.01;
-tile_plot.Children(2).Children(1).Position(1) = tile_plot.Children(2).Children(1).Position(1) + 0.01;
+gain_plot(2).Children(1).FontSize = 6;
+gain_plot(2).Children(3).FontSize = 6;
+gain_plot(2).Children(3).Position(1) = gain_plot(2).Children(3).Position(1) - 0.015;
+gain_plot(2).Children(1).Position(1) = gain_plot(2).Children(1).Position(1) + 0.015;
+gain_plot(2).Children(3).Position(2) = gain_plot(2).Children(3).Position(2) + 0.7;
+gain_plot(2).Children(1).Position(2) = gain_plot(2).Children(1).Position(2) + 0.7;
 % This string says -0.00 (due to being a very small just below 0), so fix
 % this to say 0.00
-tile_plot.Children(2).Children(1).String = '0.00';
-tile_plot.Children(2).Children(2).MarkerSize = 3;
-tile_plot.Children(2).Children(4).MarkerSize = 3;
+gain_plot(2).Children(1).String = '0.00';
+gain_plot(2).Children(2).MarkerSize = 3;
+gain_plot(2).Children(4).MarkerSize = 3;
 
 % Top-side histogram
-tile_plot.Children(3).Children(1).FontSize = 6;
-tile_plot.Children(3).Children(3).FontSize = 6;
-tile_plot.Children(3).Children(3).Position(1) = tile_plot.Children(3).Children(3).Position(1) - 0.02;
-tile_plot.Children(3).Children(1).Position(1) = tile_plot.Children(3).Children(1).Position(1) + 0.02;
-tile_plot.Children(3).Children(2).MarkerSize = 3;
-tile_plot.Children(3).Children(4).MarkerSize = 3;
+gain_plot(1).Children(1).FontSize = 6;
+gain_plot(1).Children(3).FontSize = 6;
+gain_plot(1).Children(3).Position(1) = gain_plot(1).Children(3).Position(1) - 0.04;
+gain_plot(1).Children(1).Position(1) = gain_plot(1).Children(1).Position(1) + 0.04;
+gain_plot(1).Children(2).MarkerSize = 3;
+gain_plot(1).Children(4).MarkerSize = 3;
+
+
+% Manually adjust the axes since offsetAxis requires gca object
+
+% Top histogram
+h = gain_plot(1);
+box(h, 'off');
+axis(h, 'off');
+base_pos = get(h, 'position');
+
+% Top hist - y axis
+expos_1 = base_pos;
+expos_1(1) = expos_1(1) - expos_1(3) * 0.02;
+expos_1(3) = 1/10^10;
+a1 = axes('parent', p, 'position', expos_1, 'fontsize', 6);
+set(a1, 'ytick', get(h,'ytick'), 'yticklabel', get(h,'yticklabel'))
+set(a1, 'ylim', get(h,'ylim'))
+set(a1, 'ylabel', get(h,'ylabel'))
+set(a1, 'ticklength', [0.02 0.02])
+
+% Top hist - x axis
+expos_2 = base_pos;
+expos_2(2) = expos_2(2) - expos_2(4) * 0.05;
+expos_2(4) = 1/10^10;
+a2 = axes('parent', p, 'position', expos_2, 'fontsize', 6);
+set(a2, 'xtick', get(h,'xtick'), 'xticklabel', get(h,'xticklabel'))
+set(a2, 'xlim', get(h,'xlim'))
+set(a2, 'xlabel', get(h,'xlabel'))
+set(a2, 'ticklength', [0.02 0.02])
+
+% Right histogram
+h = gain_plot(2);
+box(h, 'off');
+axis(h, 'off');
+base_pos = get(h, 'position');
+
+% Right histogram - y axis ?
+expos_1 = base_pos;
+expos_1(1) = expos_1(1) - expos_1(3) * 0.05;
+expos_1(3) = 1/10^10;
+a1 = axes('parent', p, 'position', expos_1, 'fontsize', 6);
+set(a1, 'ytick', get(h,'xtick'), 'yticklabel', get(h,'xticklabel'))
+set(a1, 'ylim', get(h,'xlim'))
+set(a1, 'ticklength', [0.02 0.02])
+
+
+% Right histogram - x axis ?
+expos_2 = base_pos;
+expos_2(2) = expos_2(2) - expos_2(4) * 0.02;
+expos_2(4) = 1/10^10;
+a2 = axes('parent', p, 'position', expos_2, 'fontsize', 6);
+set(a2, 'xtick', [0, get(h,'ytick')], 'xticklabel', [0, get(h,'yticklabel')])
+set(a2, 'xlim', get(h,'ylim'))
+set(a2, 'ticklength', [0.02 0.02])
+
+
+% Center scatterplot
+h = gain_plot(3);
+box(h, 'off');
+axis(h, 'off');
+base_pos = get(h, 'position');
+
+% Center scatter - y axis
+expos_1 = base_pos;
+expos_1(1) = expos_1(1) - expos_1(3) * 0.02;
+expos_1(3) = 1/10^10;
+a1 = axes('parent', p, 'position', expos_1, 'fontsize', 6);
+set(a1, 'ytick', get(h,'ytick'), 'yticklabel', get(h,'yticklabel'))
+set(a1, 'ylim', get(h,'ylim'))
+set(a1, 'ylabel', get(h,'ylabel'))
+set(a1, 'ticklength', [0.01 0.01])
+
+% Center scatter - x axis
+expos_2 = base_pos;
+expos_2(2) = expos_2(2) - expos_2(4) * 0.02;
+expos_2(4) = 1/10^10;
+a2 = axes('parent', p, 'position', expos_2, 'fontsize', 6, 'XScale', 'log');
+set(a2, 'xtick', get(h,'xtick'), 'xticklabel', get(h,'xticklabel'))
+a2.XTick([2,4]) = []; a2.XTickLabel([2,4]) = [];
+set(a2, 'xlim', get(h,'xlim'))
+set(a2, 'xlabel', get(h,'xlabel'))
+set(a2, 'ticklength', [0.01 0.01])
+%a2.Position(1) = a2.Position(1) + 0.005; % This is a correction for a weird bug that shifts the axis ever so slightly
+% The axis tick at 4 should be aligned with unity line x = 4
+
 
 delete(fig);
 

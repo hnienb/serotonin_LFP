@@ -24,6 +24,7 @@ end
 root_path = strjoin(parts(1:end-1), '/');
 load_path = [strjoin(parts(1:end-3), '/'), '/resources/Data/LFPprepro/'];
 save_path = [strjoin(parts(1:end-3), '/'), '/resources/Data/others/'];
+addpath(genpath([root_path, '/plots_code/HN Fcts/']))
 if ~exist(save_path, 'dir'); mkdir(save_path); end
 
 %% Load the ex data from the raw data files
@@ -220,12 +221,9 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'Plotting'))==1
 
     % Tiled Layout (matlab 2019b required) to add histograms to scatterplot
     figure;
-    t = tiledlayout(5,5);
-    t.Padding = 'none';
-    t.TileSpacing = 'none';
 
     % Histogram for relative gain change (x-axis)
-    ax1 = nexttile([1,4]);
+    ax1 = subplot(5, 5, [1,4]);
     plotHist([s_fit_results.b1], logical(drug_labels), ax1, 'log');
     set(gca, 'XScale', 'log', 'XTick', [], 'YTick', [0, 14]);
     ax1.LineWidth = 1;
@@ -252,14 +250,12 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'Plotting'))==1
     % Fix the total height of the plot to fully show markers
     ax1.YLim(2) = ax1.Children(1).Position(2);
     
-    
-root_path = strjoin(parts(1:end-3), '/');
-addpath(genpath([root_path, '/external_libraries/']));
-[figPars, axPars] = setPlotPars;
-%a1 = offset_axis(0.05, axPars);
+    % Manually adjust the xlimits so that they will eventually match the
+    % main scatter plot's x-axis 
+    xlim([0.125, 8]);
 
     % Histogram for the additive change (y-axis)
-    ax3 = nexttile(10, [4,1]);
+    ax3 = subplot(5, 5, [10, 25]);
     plotHist([s_fit_results.b0], logical(drug_labels), ax3);
     set(gca, 'XLim', [-0.6 0.6], 'XTick', [], 'YLim', [0 max(ylim)], 'YTick', [16]);
     ax3.View = [90 -90]; % Rotate plot to align with the scatterplot
@@ -293,7 +289,7 @@ addpath(genpath([root_path, '/external_libraries/']));
     ax3.YLim(2) = 16;
 
     % Scatterplot
-    ax2 = nexttile(6, [4,4]);
+    ax2 = subplot(5, 5, [6, 24]);
     ax2.LineWidth = 1;
     % Plot gray (unity) lines
     hold on;
@@ -320,12 +316,11 @@ addpath(genpath([root_path, '/external_libraries/']));
 
 
     % Format the axes 
-    linkaxes([ax1,ax2], 'x');
     set(gca, 'XScale', 'log', 'XTick', [0.125, 0.25, 1, 4, 8], 'YTick', [-0.6, 0, 0.6]);
     xlim([0.125, 8]);
     ylim([-0.6, 0.6])
-    xlabel(t, 'Relative Gain', 'fontsize', 12)
-    ylabel(t, 'Normalized Additive Change', 'fontsize', 12)
+    xlabel('Relative Gain', 'fontsize', 12)
+    ylabel('Normalized Additive Change', 'fontsize', 12)
 
     % Set the figure background to white
     set(gcf, 'color', 'w');  
