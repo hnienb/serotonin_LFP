@@ -139,10 +139,6 @@ end
 
 % Manually fix the visual parameters for readability
 gain_plot = p.Children;
-%gain_plot.XLabel.FontName = 'Arial';
-%gain_plot.XLabel.FontSize = 6;
-%gain_plot.YLabel.FontName = 'Arial';
-%gain_plot.YLabel.FontSize = 6;
 
 for i=1:3
    gain_plot(i).FontSize = 6;
@@ -156,8 +152,8 @@ gain_plot(3).Children(4).FontSize = 6;
 % Right-side histogram
 gain_plot(2).Children(1).FontSize = 6;
 gain_plot(2).Children(3).FontSize = 6;
-gain_plot(2).Children(3).Position(1) = gain_plot(2).Children(3).Position(1) - 0.015;
-gain_plot(2).Children(1).Position(1) = gain_plot(2).Children(1).Position(1) + 0.015;
+gain_plot(2).Children(3).Position(1) = gain_plot(2).Children(3).Position(1);
+gain_plot(2).Children(1).Position(1) = gain_plot(2).Children(1).Position(1);
 gain_plot(2).Children(3).Position(2) = gain_plot(2).Children(3).Position(2) + 0.7;
 gain_plot(2).Children(1).Position(2) = gain_plot(2).Children(1).Position(2) + 0.7;
 % This string says -0.00 (due to being a very small just below 0), so fix
@@ -169,8 +165,8 @@ gain_plot(2).Children(4).MarkerSize = 3;
 % Top-side histogram
 gain_plot(1).Children(1).FontSize = 6;
 gain_plot(1).Children(3).FontSize = 6;
-gain_plot(1).Children(3).Position(1) = gain_plot(1).Children(3).Position(1) - 0.04;
-gain_plot(1).Children(1).Position(1) = gain_plot(1).Children(1).Position(1) + 0.04;
+gain_plot(1).Children(3).Position(1) = gain_plot(1).Children(3).Position(1) - 0.03;
+gain_plot(1).Children(1).Position(1) = gain_plot(1).Children(1).Position(1) + 0.03;
 gain_plot(1).Children(2).MarkerSize = 3;
 gain_plot(1).Children(4).MarkerSize = 3;
 
@@ -255,8 +251,6 @@ a2.XTick([2,4]) = []; a2.XTickLabel([2,4]) = [];
 set(a2, 'xlim', get(h,'xlim'))
 set(a2, 'xlabel', get(h,'xlabel'))
 set(a2, 'ticklength', [0.01 0.01])
-%a2.Position(1) = a2.Position(1) + 0.005; % This is a correction for a weird bug that shifts the axis ever so slightly
-% The axis tick at 4 should be aligned with unity line x = 4
 
 
 delete(fig);
