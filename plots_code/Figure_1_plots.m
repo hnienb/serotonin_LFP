@@ -53,10 +53,10 @@ savefig([save_path '/ka_258_20_5HT.fig'])
 %% Plot the mean firing rate plot
 
 % Load the LFP data
-load([data_path, '/Lfps_pair/Lfps_rc_cleaned.mat']);
+load([data_path, '/Lfps_pair/Lfps_rc.mat']);
 
 % Process the LFP data into a usable analysis table
-anaT = analysis_table(Lfps_cleaned, 'drug');
+anaT = analysis_table(Lfps, 'drug');
 
 % Plot the mean firing rates of baseline condition against drug condition
 plot_vars(anaT, 'fr base', 'fr drug');
@@ -73,7 +73,12 @@ savefig([save_path '/fr.fig'])
 %% Plot the Gain Change
 
 % Load, process, and analysis the data to plot gain change
-plot_gain_change('all');
+plot_gain_change('Plotting');
+
+% Give the figure window a name to distinguish it
+set(gcf, 'name', 'gain_change');
+
+fig_list = findobj('Type', 'figure');
 
 % Save the figure
-savefig([save_path '/gain_change.fig']);
+savefig(fig_list(1), [save_path '/gain_change.fig']);
