@@ -16,8 +16,8 @@ figPos = [5 5 21 20]; % this is in cm
 figure(figPars);
 set(gcf, 'position', figPos, 'paperposition', figPos);
 
-xbegin = 2;
-ybegin = 8;
+xbegin = 1;
+ybegin = 17;
 sq = 2.5;
 offset_figlab = 1.8;
 figspace_x = 5.5;
@@ -370,8 +370,8 @@ savefig([figpath '/Figure_2.fig'])
 
 % Manually setting the pdf size to fit the plot properly
 set(gcf, 'PaperUnits', 'inches');
-set(gcf, 'PaperSize', [10 7.5]);
+set(gcf, 'PaperSize', [10 10]);
 set(gcf, 'PaperPositionMode', 'manual');
-set(gcf, 'PaperPosition', [0 0 10 7.5]);
+set(gcf, 'PaperPosition', [0 0 10 10]);
 
 print(gcf,'-dpdf', [figpath '/Figure_2.pdf'], sprintf('-r%d',300))

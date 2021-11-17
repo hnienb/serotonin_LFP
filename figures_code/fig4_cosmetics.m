@@ -189,8 +189,8 @@ savefig([figpath '/Figure_4.fig'])
 
 % Manually setting the pdf size to fit the plot properly
 set(gcf, 'PaperUnits', 'inches');
-set(gcf, 'PaperSize', [10 7.5]);
+set(gcf, 'PaperSize', [10 10]);
 set(gcf, 'PaperPositionMode', 'manual');
-set(gcf, 'PaperPosition', [0 0 10 7.5]);
+set(gcf, 'PaperPosition', [0 0 10 10]);
 
 print(gcf,'-dpdf', [figpath '/Figure_4.pdf'], sprintf('-r%d',300))

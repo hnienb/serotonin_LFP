@@ -273,7 +273,7 @@ for a = 1:2 % animals
     for d = 1:2 % drugs
         % STA =======================================
         % generate an axis
-        ax_new = axes(axPars, 'position', [xbegin+figspace_x*(2*(a-1)) ybegin+figspace_y*d sq sq]);
+        ax_new = axes(axPars, 'position', [xbegin+figspace_x*(2*(a-1))*1.05 ybegin+figspace_y*d sq sq]);
 
         % open figures
         fig = openfig([figpath '/subplots/sta_rc.fig'],'invisible');
@@ -365,7 +365,7 @@ for a = 1:2 % animals
     
     % STA =======================================
     % generate an axis
-    ax_new = axes(axPars, 'position', [xbegin+figspace_x*(2*(a-1)) ybegin+figspace_y*3 sq sq]);
+    ax_new = axes(axPars, 'position', [xbegin+figspace_x*(2*(a-1))*1.05 ybegin+figspace_y*3 sq sq]);
 
     % open figures
     fig = openfig([figpath '/subplots/sta_sc.fig'],'invisible');
@@ -442,8 +442,8 @@ savefig([figpath '/Figure_3.fig'])
 
 % Manually setting the pdf size to fit the plot properly
 set(gcf, 'PaperUnits', 'inches');
-set(gcf, 'PaperSize', [10 7.5]);
+set(gcf, 'PaperSize', [10 10]);
 set(gcf, 'PaperPositionMode', 'manual');
-set(gcf, 'PaperPosition', [0 0 10 7.5]);
+set(gcf, 'PaperPosition', [0 0 10 10]);
 
 print(gcf,'-dpdf', [figpath '\Figure_3.pdf'], sprintf('-r%d',300))
