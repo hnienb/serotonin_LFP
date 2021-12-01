@@ -319,8 +319,8 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'Plotting'))==1
     set(gca, 'XScale', 'log', 'XTick', [0.125, 0.25, 1, 4, 8], 'YTick', [-0.6, 0, 0.6]);
     xlim([0.125, 8]);
     ylim([-0.6, 0.6])
-    xlabel('Relative Gain', 'fontsize', 12)
-    ylabel('Normalized Additive Change', 'fontsize', 12)
+    xlabel('relative gain', 'fontsize', 12)
+    ylabel('normalized additive change', 'fontsize', 12)
 
     % Set the figure background to white
     set(gcf, 'color', 'w');  
