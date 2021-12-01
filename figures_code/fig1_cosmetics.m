@@ -120,10 +120,8 @@ title({'mean firing rate', '(spk/s)'}, 'fontsize', 6)
 offset_axis(0.05, axPars)
 
 %%
-% second column
-% generate an panel
-p = uipanel('Units', 'centimeters', 'Position', [xbegin+figspace_x ybegin+figspace_y*1.120 sq*1.7 sq*1.7], 'BackgroundColor', 'white');
-p.BorderType = 'None';
+% second row, second column
+main_fig = gcf;
 
 % open figures
 fig = openfig([figpath '/subplots/gain_change.fig'], 'invisible');
@@ -131,99 +129,118 @@ fig = openfig([figpath '/subplots/gain_change.fig'], 'invisible');
 % generate 'axis' (tiledlayout) object
 axesObjs = get(fig, 'Children');
 
-% Copy the 'axis' into the new panel
-for i = 1:3
-    axesObjs(i).Parent = p;
-end
-
+% Copy over each individual axis object to the main figure
+center_ax = axesObjs(1);
+side_ax = axesObjs(2);
+top_ax = axesObjs(3);
+center_ax.Parent = main_fig;
+side_ax.Parent = main_fig;
+top_ax.Parent = main_fig;
+center_ax.Units = 'centimeters';
+side_ax.Units = 'centimeters';
+top_ax.Units = 'centimeters';
+center_ax.Position = [xbegin+figspace_x ybegin+figspace_y sq sq];
+top_ax.Position = [xbegin+figspace_x ybegin+figspace_y+sq+0.2 sq sq/3];
+side_ax.Position = [xbegin+figspace_x+sq+0.2 ybegin+figspace_y sq/3 sq];
 
 % Manually fix the visual parameters for readability
-gain_plot = p.Children;
+center_ax.FontSize = 6;
+center_ax.LineWidth = 0.5;
+top_ax.FontSize = 6;
+top_ax.LineWidth = 0.5;
+side_ax.FontSize = 6;
+side_ax.LineWidth = 0.5;
 
-for i=1:3
-   gain_plot(i).FontSize = 6;
-   gain_plot(i).LineWidth = 0.5;
-end
 
 % Central scatterplot
-gain_plot(3).Children(1).FontSize = 6;
-gain_plot(3).Children(4).FontSize = 6;
-
-% Reduce the size of the markers and edges to make uniform with other figures
-for i = [2,3,5,6]
-    gain_plot(3).Children(i).SizeData = 10;
-    gain_plot(3).Children(i).LineWidth = 0.05;
-    gain_plot(3).Children(i).MarkerEdgeColor = gain_plot(3).Children(i).MarkerFaceColor;
-    gain_plot(3).Children(i).MarkerEdgeAlpha = gain_plot(3).Children(i).MarkerFaceAlpha;
-end
-
-% Move the group number labels down on the plot
-gain_plot(3).Children(1).Position(2) = 0.23;
-gain_plot(3).Children(4).Position(2) = 0.18;
 
 % Narrow down y-range to exclude outlier point (focus on other data points)
-gain_plot(3).YLim = [-0.25, 0.25];
-gain_plot(3).YTick = [-0.25, 0, 0.25];
+center_ax.YLim = [-0.25, 0.25];
+center_ax.YTick = [-0.25, 0, 0.25];
+
+% Move the group number labels down on the plot after fixing font size
+center_ax.Children(1).FontSize = 6;
+center_ax.Children(4).FontSize = 6;
+center_ax.Children(1).Position(2) = 0.23;
+center_ax.Children(4).Position(2) = 0.18;
 
 % Change color and thickness of unity lines to be more uniform with other figures
 for i = 7:8
-    gain_plot(3).Children(i).LineWidth = 0.25;
-	gain_plot(3).Children(i).Color = [0.5, 0.5, 0.5];
+    center_ax.Children(i).LineWidth = 0.25;
+	center_ax.Children(i).Color = [0.5, 0.5, 0.5];
 end
+
+% Reduce the size of the markers and edges to make uniform with other figures
+for i = [2,3,5,6]
+    center_ax.Children(i).SizeData = 10;
+    center_ax.Children(i).LineWidth = 0.05;
+    center_ax.Children(i).MarkerEdgeColor = center_ax.Children(i).MarkerFaceColor;
+    center_ax.Children(i).MarkerEdgeAlpha = center_ax.Children(i).MarkerFaceAlpha;
+end
+
 
 % Right-side histogram
 
-% Change the median labels to make uniform with other figures
-for i = [1,3]
-    gain_plot(2).Children(i).FontSize = 5;
-    gain_plot(2).Children(i).FontWeight = 'normal';
-    gain_plot(2).Children(i).Position(1) = gain_plot(2).Children(i).Position(1);
-    gain_plot(2).Children(i).Position(2) = gain_plot(2).Children(i).Position(2) + 0.9;
-end
-
-% This string says -0.00 (just below 0), so fix this to say 0.00
-gain_plot(2).Children(1).String = '0.00';
-
-% Reduce the marker size for medians to fit better
-gain_plot(2).Children(2).MarkerSize = 1;
-gain_plot(2).Children(4).MarkerSize = 1;
-
 % Change range to follow central scatterplots y-axis narrowing
-gain_plot(2).XLim = [-0.25, 0.25];
+side_ax.XLim = [-0.25, 0.25];
 
 % Update the histogram bounds and bins to follow narrow 'y'-range
 for i = [5,6]
-    gain_plot(2).Children(i).BinLimits = [-0.25, 0.25];
-    gain_plot(2).Children(i).NumBins = 20;
+    side_ax.Children(i).BinLimits = [-0.25, 0.25];
+    side_ax.Children(i).NumBins = 35;
 end
+
+% Scale the 'Counts' axis to reflect the previous changes
+side_ax.YLim = [0 8];
+side_ax.YTick = [8];
+
+% Change the median labels to make uniform with other figures
+for i = [1,3]
+    side_ax.Children(i).FontSize = 5;
+    side_ax.Children(i).FontWeight = 'normal';
+    side_ax.Children(i).Position(1) = side_ax.Children(i).Position(1) + 0.0175*(i-2);
+    side_ax.Children(i).Position(2) = 8;
+end
+
+% This string says -0.00 (just below 0), so fix this to say 0.00
+side_ax.Children(1).String = '0.00';
+
+% Reduce the size and position of markers for medians to fit better
+for i = [2,4]
+    side_ax.Children(i).MarkerSize = 1;
+    side_ax.Children(i).YData = side_ax.Children(i-1).Position(2) - 1.0;
+end
+
 
 % Top-side histogram
 
 % Change the median labels to make uniform with other figures
-for i = [1,3]
-    gain_plot(1).Children(i).FontSize = 5;
-    gain_plot(1).Children(i).FontWeight = 'normal';
-    gain_plot(1).Children(i).Position(1) = gain_plot(1).Children(i).Position(1) + 0.12*(2-i);
-    gain_plot(1).Children(i).Position(2) = gain_plot(1).Children(i).Position(2) + 0.2;
+for i = [1,3]  
+    top_ax.Children(i).FontSize = 5;
+    top_ax.Children(i).FontWeight = 'normal';
+    top_ax.Children(i).Position(1) = top_ax.Children(i).Position(1) + 0.12*(2-i);
+    top_ax.Children(i).Position(2) = top_ax.Children(i).Position(2) + 0.2;
 end
 
 % Reduce the marker size for medians to make uniform with other figures
-gain_plot(1).Children(2).MarkerSize = 1;
-gain_plot(1).Children(4).MarkerSize = 1;
+top_ax.Children(2).MarkerSize = 1;
+top_ax.Children(4).MarkerSize = 1;
 
 % Manually adjust the axes since offsetAxis requires gca object
 
 % Top histogram
-h = gain_plot(1);
+h = top_ax;
+
 box(h, 'off');
 axis(h, 'off');
 base_pos = get(h, 'position');
 
 % Top hist - y axis
 expos_1 = base_pos;
-expos_1(1) = expos_1(1) - expos_1(3) * 0.02;
+expos_1(1) = expos_1(1) - expos_1(3) * 0.05;
 expos_1(3) = 1/10^10;
-a1_top = axes('parent', p, 'position', expos_1, 'fontsize', 6, 'TickDir', 'out');
+
+a1_top = axes('parent', main_fig, 'units', 'centimeters', 'position', expos_1, 'fontsize', 6, 'TickDir', 'out');
 set(a1_top, 'ytick', get(h,'ytick'), 'yticklabel', get(h,'yticklabel'), ...
     'ylim', get(h,'ylim'), 'ylabel', get(h,'ylabel'), 'ticklength', [0.02 0.02])
 
@@ -231,13 +248,15 @@ set(a1_top, 'ytick', get(h,'ytick'), 'yticklabel', get(h,'yticklabel'), ...
 expos_2 = base_pos;
 expos_2(2) = expos_2(2) - expos_2(4) * 0.05;
 expos_2(4) = 1/10^10;
-a2_top = axes('parent', p, 'position', expos_2, 'fontsize', 6, 'TickDir', 'out');
+
+a2_top = axes('parent', main_fig, 'units', 'centimeters', 'position', expos_2, 'fontsize', 6, 'TickDir', 'out');
 set(a2_top, 'xtick', get(h,'xtick'), 'xticklabel', get(h,'xticklabel'), 'xlim', ...
     get(h,'xlim'), 'xlabel', get(h,'xlabel'), 'ticklength', [0.02 0.02])
 
 
 % Right histogram
-h = gain_plot(2);
+h = side_ax;
+
 box(h, 'off');
 axis(h, 'off');
 base_pos = get(h, 'position');
@@ -246,39 +265,44 @@ base_pos = get(h, 'position');
 expos_1 = base_pos;
 expos_1(1) = expos_1(1) - expos_1(3) * 0.05;
 expos_1(3) = 1/10^10;
-a1_right = axes('parent', p, 'position', expos_1, 'fontsize', 6, 'TickDir', 'out');
+
+a1_right = axes('parent', main_fig, 'units', 'centimeters', 'position', expos_1, 'fontsize', 6, 'TickDir', 'out');
 set(a1_right, 'ytick', get(h,'xtick'), 'yticklabel', get(h,'xticklabel'), 'ylim', ...
     get(h,'xlim'), 'ticklength', [0.02 0.02])
 
 
 % Right histogram - x axis
 expos_2 = base_pos;
-expos_2(2) = expos_2(2) - expos_2(4) * 0.02;
+expos_2(2) = expos_2(2) - expos_2(4) * 0.05;
 expos_2(4) = 1/10^10;
-a2_right = axes('parent', p, 'position', expos_2, 'fontsize', 6, 'TickDir', 'out');
+
+a2_right = axes('parent', main_fig, 'units', 'centimeters', 'position', expos_2, 'fontsize', 6, 'TickDir', 'out');
 set(a2_right, 'xtick', [0, get(h,'ytick')], 'xticklabel', [0, get(h,'yticklabel')], ...
     'xlim', get(h,'ylim'), 'ticklength', [0.02 0.02])
 
 
 % Center scatterplot
-h = gain_plot(3);
+h = center_ax;
+
 box(h, 'off');
 axis(h, 'off');
 base_pos = get(h, 'position');
 
 % Center scatter - y axis
 expos_1 = base_pos;
-expos_1(1) = expos_1(1) - expos_1(3) * 0.02;
+expos_1(1) = expos_1(1) - expos_1(3) * 0.05;
 expos_1(3) = 1/10^10;
-a1_center = axes('parent', p, 'position', expos_1, 'fontsize', 6, 'TickDir', 'out');
+
+a1_center = axes('parent', main_fig, 'units', 'centimeters', 'position', expos_1, 'fontsize', 6, 'TickDir', 'out');
 set(a1_center, 'ytick', get(h,'ytick'), 'yticklabel', get(h,'yticklabel'), 'ylim', ...
     get(h,'ylim'), 'ylabel', get(h,'ylabel'), 'ticklength', [0.02 0.02])
 
 % Center scatter - x axis
 expos_2 = base_pos;
-expos_2(2) = expos_2(2) - expos_2(4) * 0.02;
+expos_2(2) = expos_2(2) - expos_2(4) * 0.05;
 expos_2(4) = 1/10^10;
-a2_center = axes('parent', p, 'position', expos_2, 'fontsize', 6, 'XScale', 'log', 'TickDir', 'out');
+
+a2_center = axes('parent', main_fig, 'units', 'centimeters', 'position', expos_2, 'fontsize', 6, 'XScale', 'log', 'TickDir', 'out');
 set(a2_center, 'xtick', get(h,'xtick'), 'xticklabel', get(h,'xticklabel'), 'xlim', ...
     get(h,'xlim'), 'xlabel', get(h,'xlabel'), 'ticklength', [0.02 0.02])
 
