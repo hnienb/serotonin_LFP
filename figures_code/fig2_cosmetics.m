@@ -105,10 +105,12 @@ plot(ax_new, [0 0], [0 48], '--w', 'linewidth', 0.5);
 % format
 caxis(crange)
 c = colorbar('eastoutside');
-c.Label.String = '\Delta \muV^{2}';
+c.Label.String = '\Delta power (a.u.)';
 c.Ticks = [crange(1) 0 crange(2)];
 c.TickDirection = 'out';
 c.Position(1) = c.Position(1)*1.4;
+c.FontSize = 6;
+
 colormap(map)
 
 caxis(crange)
@@ -286,7 +288,7 @@ for f = 1:2
     % plot
     for d = 1:2 % drug      
         % generate an axis
-        ax_new = axes(axPars, 'position', [xbegin+(1+f)*figspace_x/1.05 ybegin+(d-1)*figspace_y sq sq]);
+        ax_new = axes(axPars, 'position', [xbegin+(1.7+f)*figspace_x/1.4 ybegin+(d-1)*figspace_y sq sq]);
         for a = 1:2 % animal     
             % plot
             s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz, 'marker', mrcs{a}, ...
@@ -338,7 +340,7 @@ for f = 1:2
 
     % plot
     % generate an axis
-    ax_new = axes(axPars, 'position', [xbegin+(1+f)*figspace_x/1.05 ybegin+2*figspace_y sq sq]);
+    ax_new = axes(axPars, 'position', [xbegin+(1.7+f)*figspace_x/1.4 ybegin+2*figspace_y sq sq]);
     for a = 1:2 % animal     
         % plot
         s = scatter(ax_new, data{a}{1}(1, :), data{a}{1}(2, :), msz, 'marker', mrcs{a}, ...
