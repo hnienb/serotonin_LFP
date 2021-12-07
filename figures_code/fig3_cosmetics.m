@@ -32,7 +32,7 @@ cols = [0 0 0; 1 0 0];
 mrcs = {'o', 'square'};
 drugs = {'NaCl', '5HT'};
 monkey = {'monkey K', 'monkey M'};
-msz = 10;
+msz = {7,10};
 nses = [13, 16; 4, 35];
 stac = 0.07;
 gr = 1.618;
@@ -90,7 +90,7 @@ delete(fig);
 % plot
 for a = 1:2 % animal
     for d = 1:2 % drug
-        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz, 'marker', mrcs{a}, ...
+        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz{a}, 'marker', mrcs{a}, ...
             'markerfacecolor', cols(d, :), 'markeredgecolor', cols(d, :), 'markerfacealpha', 0.4, ...
             'markeredgealpha', 0.4, 'linewidth', 0.05);
         hold on;
@@ -138,7 +138,7 @@ delete(fig);
 % plot
 for a = 1:2 % animal
     for d = 1:2 % drug
-        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz, 'marker', mrcs{a}, ...
+        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz{a}, 'marker', mrcs{a}, ...
             'markerfacecolor', cols(d, :), 'markeredgecolor', cols(d, :), 'markerfacealpha', 0.4, ...
             'markeredgealpha', 0.4, 'linewidth', 0.05);
         hold on;
@@ -168,41 +168,6 @@ offset_axis(0.05, axPars)
 % delete fig
 delete(fig);
 
-% plot
-for a = 1:2 % animal
-    for d = 1:2 % drug
-        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz, 'marker', mrcs{a}, ...
-            'markerfacecolor', cols(d, :), 'markeredgecolor', cols(d, :), 'markerfacealpha', 0.4, ...
-            'markeredgealpha', 0.4, 'linewidth', 0.05);
-        hold on;
-    end    
-end
-xrange = [-0.5 0.6];
-yrange = [-1.75 4.75];
-hold on;
-plot([0 0], yrange, '-', 'color', 0.5*[1 1 1], 'linewidth', 0.25)
-hold on;
-plot(xrange, [0 0], '-', 'color', 0.5*[1 1 1], 'linewidth', 0.25)
-
-% regression line
-for d = 1:2
-   X = [data{1}{d}(1, :)'; data{2}{d}(1, :)'];
-   beta = glmfit(X, [data{1}{d}(2, :)'; data{2}{d}(2, :)']); 
-   hold on;
-   plot(xrange, glmval(beta, xrange, 'identity'), '-', 'color', cols(d, :), 'linewidth', 0.5)
-end
-
-% format
-xlim(xrange)
-ylim(yrange)
-set(gca, 'XTick', [xrange(1) 0 xrange(2)])
-set(gca, 'YTick', [yrange(1) 0 yrange(2)])
-xlabel('\Delta stLFP amplitude', 'fontsize', 6)
-ylabel('\Delta low-freq power', 'fontsize', 6)
-
-% offset axis
-offset_axis(0.05, axPars)
-
 
 % stLFP vs LFP power ===================================
 % generate an axis
@@ -226,7 +191,7 @@ delete(fig);
 % plot
 for a = 1:2 % animal
     for d = 1:2 % drug
-        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz, 'marker', mrcs{a}, ...
+        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz{a}, 'marker', mrcs{a}, ...
             'markerfacecolor', cols(d, :), 'markeredgecolor', cols(d, :), 'markerfacealpha', 0.4, ...
             'markeredgealpha', 0.4, 'linewidth', 0.05);
         hold on;

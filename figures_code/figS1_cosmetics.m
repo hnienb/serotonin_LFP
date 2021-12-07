@@ -12,7 +12,6 @@ end
 dir_path = strjoin(parts(1:end-2), '/');
 
 [figPars, axPars] = setPlotPars;
-% figPos = [10 10 21 29.7]; % this is in cm
 figPos = [5 5 21 20]; % this is in cm
 figure(figPars);
 set(gcf, 'position', figPos, 'paperposition', figPos);
@@ -34,7 +33,7 @@ mrcs = {'o', 'square'};
 drugs = {'NaCl', '5HT'};
 monkey = {'monkey K', 'monkey M'};
 nses = [13, 16; 4, 35];
-msz = 10;
+msz = {7,10};
 stac = 0.07;
 gr = 1.618;
 
@@ -93,7 +92,7 @@ delete(fig);
 % plot
 for a = 1:2 % animal
     for d = 1:2 % drug
-        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz, 'marker', mrcs{a}, ...
+        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz{a}, 'marker', mrcs{a}, ...
             'markerfacecolor', cols(d, :), 'markeredgecolor', cols(d, :), 'markerfacealpha', 0.4, ...
             'markeredgealpha', 0.4, 'linewidth', 0.05);
         hold on;
@@ -141,7 +140,7 @@ delete(fig);
 % plot
 for a = 1:2 % animal
     for d = 1:2 % drug
-        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz, 'marker', mrcs{a}, ...
+        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz{a}, 'marker', mrcs{a}, ...
             'markerfacecolor', cols(d, :), 'markeredgecolor', cols(d, :), 'markerfacealpha', 0.4, ...
             'markeredgealpha', 0.4, 'linewidth', 0.05);
         hold on;
@@ -191,7 +190,7 @@ delete(fig);
 % plot
 for a = 1:2 % animal
     for d = 1:2 % drug
-        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz, 'marker', mrcs{a}, ...
+        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz{a}, 'marker', mrcs{a}, ...
             'markerfacecolor', cols(d, :), 'markeredgecolor', cols(d, :), 'markerfacealpha', 0.4, ...
             'markeredgealpha', 0.4, 'linewidth', 0.05);
         hold on;

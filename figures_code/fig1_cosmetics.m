@@ -32,7 +32,7 @@ figpath = [dir_path, '/resources/Figure_1/'];
 addpath(figpath)
 cols = [0 0 0; 1 0 0];
 mrcs = {'o', 'square'};
-msz = 10;
+msz = {7, 10};
 
 
 %%
@@ -93,7 +93,7 @@ delete(fig);
 % plot
 for a = 1:2 % animal
     for d = 1:2 % drug
-        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz, 'marker', mrcs{a}, ...
+        s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz{a}, 'marker', mrcs{a}, ...
             'markerfacecolor', cols(d, :), 'markeredgecolor', cols(d, :), 'markerfacealpha', 0.4, ...
             'markeredgealpha', 0.4, 'linewidth', 0.05);
         hold on;
@@ -163,6 +163,13 @@ center_ax.Children(1).FontSize = 6;
 center_ax.Children(4).FontSize = 6;
 center_ax.Children(1).Position(2) = 0.23;
 center_ax.Children(4).Position(2) = 0.18;
+center_ax.XLabel.FontSize = 6;
+center_ax.YLabel.FontSize = 6;
+center_ax.XColor = [0 0 0];
+center_ax.YColor = [0 0 0];
+center_ax.YLabel.Color = [0 0 0];
+center_ax.XLabel.Color = [0 0 0];
+
 
 % Change color and thickness of unity lines to be more uniform with other figures
 for i = 7:8
@@ -172,11 +179,15 @@ end
 
 % Reduce the size of the markers and edges to make uniform with other figures
 for i = [2,3,5,6]
-    center_ax.Children(i).SizeData = 10;
     center_ax.Children(i).LineWidth = 0.05;
     center_ax.Children(i).MarkerEdgeColor = center_ax.Children(i).MarkerFaceColor;
     center_ax.Children(i).MarkerEdgeAlpha = center_ax.Children(i).MarkerFaceAlpha;
 end
+center_ax.Children(2).SizeData = 10;
+center_ax.Children(3).SizeData = 7;
+center_ax.Children(5).SizeData = 10;
+center_ax.Children(6).SizeData = 7;
+
 
 
 % Right-side histogram
@@ -309,12 +320,6 @@ set(a2_center, 'xtick', get(h,'xtick'), 'xticklabel', get(h,'xticklabel'), 'xlim
 % Remove unnecessary labels
 a2_center.XTick([2,4]) = []; a2_center.XTickLabel([2,4]) = [];
 a2_center.XMinorTick = 'off';
-
-
-% Fix the lengths of axes so that they are equal
-a1_center.Position(4) = a2_center.Position(3);
-a1_right.Position(4) = a2_center.Position(3);
-h.Position([3,4]) = [a2_center.Position(3), a2_center.Position(3)];
 
 % Remove the opened figure
 delete(fig);

@@ -32,7 +32,7 @@ xlabs = {'Baseline', 'Baseline', 'High FR'};
 ylabs = {'NaCl', '5HT', 'Low FR'};
 monkey = {'kaki', 'mango', 'all'};
 nses = [13, 16; 4, 37];
-msz = 10;
+msz = {7,10};
 stac = 0.07;
 gr = 1.618;
 animals = {'monkey K', 'monkey M'};
@@ -117,7 +117,7 @@ for c = 1:6
         xydata{c, a} = [axo.Children(lenc-2-a).XData; axo.Children(lenc-2-a).YData];
         
         % plot
-        s = scatter(ax_new, xydata{c, a}(1, :), xydata{c, a}(2, :), msz, 'marker', mrcs{a}, ...
+        s = scatter(ax_new, xydata{c, a}(1, :), xydata{c, a}(2, :), msz{a}, 'marker', mrcs{a}, ...
             'markerfacecolor', pcol(c, :), 'markeredgecolor', pcol(c, :), 'markerfacealpha', 0.4, ...
             'markeredgealpha', 0.4, 'linewidth', 0.05);
         hold(ax_new, 'on');

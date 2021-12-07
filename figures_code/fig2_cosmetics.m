@@ -31,7 +31,7 @@ mrcs = {'o', 'square'};
 drugs = {'NaCl', '5HT'};
 monkey = {'monkey K', 'monkey M'};
 nses = [13, 16; 4, 35];
-msz = 10;
+msz = {7, 10};
 map = jet;
 
 gr = 1.618;
@@ -291,7 +291,7 @@ for f = 1:2
         ax_new = axes(axPars, 'position', [xbegin+(1.7+f)*figspace_x/1.4 ybegin+(d-1)*figspace_y sq sq]);
         for a = 1:2 % animal     
             % plot
-            s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz, 'marker', mrcs{a}, ...
+            s = scatter(ax_new, data{a}{d}(1, :), data{a}{d}(2, :), msz{a}, 'marker', mrcs{a}, ...
                 'markerfacecolor', pcol, 'markeredgecolor', pcol, 'markerfacealpha', 0.4, ...
                 'markeredgealpha', 0.4, 'linewidth', 0.05);
             hold(ax_new, 'on');
@@ -343,7 +343,7 @@ for f = 1:2
     ax_new = axes(axPars, 'position', [xbegin+(1.7+f)*figspace_x/1.4 ybegin+2*figspace_y sq sq]);
     for a = 1:2 % animal     
         % plot
-        s = scatter(ax_new, data{a}{1}(1, :), data{a}{1}(2, :), msz, 'marker', mrcs{a}, ...
+        s = scatter(ax_new, data{a}{1}(1, :), data{a}{1}(2, :), msz{a}, 'marker', mrcs{a}, ...
             'markerfacecolor', pcol, 'markeredgecolor', pcol, 'markerfacealpha', 0.4, ...
             'markeredgealpha', 0.4, 'linewidth', 0.05);
         hold(ax_new, 'on');
