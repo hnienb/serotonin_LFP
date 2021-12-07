@@ -43,19 +43,6 @@ end
 disp(['analyzed ses:' num2str(lenses)])
 % path =======================================
 
-% TODO: FIX THIS OR REMOVE IT
-if ismember(1, contains(cd, 'gpfs0'))
-    mypath = '/gpfs01/nienborg/group';
-elseif ismember(1, contains(cd, '\\172.25.250.112'))
-    mypath = '//172.25.250.112/nienborg_group';
-else
-    mypath = 'Z:';
-end
-
-
-addpath(genpath([mypath '/Katsuhisa/code/integrated/matlab_usefulfunc']))
-addpath(genpath([mypath '/Katsuhisa/code/integrated/cbrewer']))
-
 % stimulus type ============================
 stmdur = 0.45;
 switch datast{1}.stm.param
@@ -63,54 +50,6 @@ switch datast{1}.stm.param
         stmidx = ones(lenses, 1);
         stmlab = {'ORxRC'};
         stmdur = 2;
-    case 'or' % TODO: Check to see if I need to keep this (and the rest underneath)
-        stmidx = zeros(lenses, 2);
-        stmlab = {'anti-pref', 'pref'};
-        for i = 1:lenses
-            [~, sortidx] = sort(datast{i}.cond(1).spk_tu{2}(:,1));
-            mini = 2;
-            maxi = length(sortidx);
-            try
-                while isnan(datast{i}.cond(1).sta.p{sortidx(mini)})...
-                        | isnan(datast{i}.cond(2).sta.p{sortidx(mini)})
-                    mini = mini + 1;
-                end
-                while isnan(datast{i}.cond(1).sta.p{sortidx(maxi)})...
-                        | isnan(datast{i}.cond(2).sta.p{sortidx(maxi)})
-                    maxi = maxi - 1;
-                end
-                stmidx(i, :) = [sortidx(mini), sortidx(maxi)];
-            catch
-                disp('')
-            end
-        end
-    case 'co'
-        if length(datast{end}.stm.vals) > 1
-            stmidx = zeros(lenses, 3);
-            stmlab = {'0.25', '0.5', '1'};
-            cos = [0.25, 0.5, 1];
-            for i = 1:lenses
-                for c = 1:3
-                    [~, idx] = min(abs(datast{i}.stm.vals - cos(c)));
-                    stmidx(i, c) = idx;
-                end
-            end
-        else
-            stmidx = ones(lenses, 1);
-            stmlab = {'ORxRC (CO)'};
-            stmdur = 2;
-        end
-    case {'sz', 'sf'} % sf = spatial frequency, size stim parameters
-        stmidx = zeros(lenses, 2);
-        stmlab = {'min res stm', 'max res stm'};
-        for i = 1:lenses
-            [~, sortidx] = sort(datast{i}.cond(1).spk_tu{2}(:,1));
-            mini = sortidx(1);
-            if mini == 1
-                mini = sortidx(2);
-            end
-            stmidx(i, :) = [mini, sortidx(end)];
-        end
 end
 
 % remove no-data sessions
@@ -702,12 +641,18 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'spectrogram'))==
     if size(freq, 1) > size(freq, 2)
         freq = freq';
     end
+    % Need to add a small epsilon value to 0 since log
+                    % scale removes the plot
+    freq_fill  = freq;
+    if freq(1) == 0
+        freq_fill(1) = freq_fill(1) + 10^-10;
+    end
     lenf = length(freq);
     spe_t = datast{end}.cond(1).spectrogram.t{1};
     lent = length(spe_t);
     spe_t = linspace(-0.1, stmdur, lent);
     yy = {[0 0], [0 0]};
-%     step = 3:1:48; % Hz
+
     for s = 1:ss
         % data extraction
         ntr = zeros(lenses, 2);
@@ -719,16 +664,12 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'spectrogram'))==
                 ntr(i, d) = size(datast{i}.cond(d).mat{1}, 1);
                 sz = size(datast{i}.cond(d).spectrogram.S{stmidx(i, s)});
                 if sz(2) > sz(1)
-%                     S = 10*log10(datast{i}.cond(d).spectrogram.S{stmidx(i, s)});
                     S = datast{i}.cond(d).spectrogram.S{stmidx(i, s)};
                 else
-%                     S = 10*log10(datast{i}.cond(d).spectrogram.S{stmidx(i, s)})';
                     S = datast{i}.cond(d).spectrogram.S{stmidx(i, s)}';
                 end 
                 if sum(isnan(S(:)))==0
                     S = imresize(S, [lenf, lent]);
-%                     Sres = S - repmat(nanmean(S(:, spe_t < 0), 2), 1, lent);
-%                     Sall(i, :, :, d) = Sres(:, end - length(spe_t)+1:end);
                     Sall(i, :, :, d) = S(:, end - length(spe_t)+1:end).*ntr(i, d);                    
                 end
                 Sabs = nanmean(S(:, spe_t > datast{end}.window{end}(1)), 2);
@@ -763,60 +704,67 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'spectrogram'))==
                 for d = 1:2        
                     mat{d}(nans, :) = [];
                     [me, sem] = weighted(mat{d}, ntr(cond, d));
-%                     me = mean(mat{d}, 1);
-%                     sem = std(mat{d}, [], 1)/sqrt(lenses - length(nans));
-                    fill_between(freq, me - sem, me + sem, cols(d, :), 0.4)
+                                   
+                    fill_between(freq_fill, me - sem, me + sem, cols(d, :), 0.4)
                     hold on;
                     plot(freq, me, '-', 'color', cols(d, :))
-                    hold on;                                
+                    hold on;
                     
-                    % for stats
-%                     for b = 1:length(freq)
-%                         if b == length(step)-1
-%                             sz = step(2)-step(1)+1;
-%                         else
-%                             sz = step(2)-step(1);
-%                         end
-%                         statistics.drug(k).occrall_pow{b, d} = mat{d}(:, step(b) <= freq & ...
-%                             step(b)+sz > freq);
-%                         statistics.drug(k).occrall_pow{b, d} = mat{d}(:, b);
-%                     end
                     for b = 1:lenb
                         statistics.drug(k).occrall_pow{b, d} = mat{d}(:, bandrange{b}(1) <= freq & ...
-                            bandrange{b}(2) >= freq);
+                        bandrange{b}(2) >= freq);
                     end
                 end
-
-%                 % stats
-%                 sfreq = freq(freq >= 3 & freq <= 48);
+                
+                % Find significance under Bonferroni corrected value
+                sig_freq = {};
+                r = 1;
+                for f = 1:lenf
+                    pval = signrank(mat{1}(:,f), mat{2}(:,f));
+                    if pval < 0.05/lenf
+                        sig_freq{r} = f;
+                        r = r + 1;
+                    end
+                end
+                
+                % Hacky way to find consecutive indices
+                r = 1;
+                consec_sig = {};
+                index1 = 1;
+                while index1 <= length(sig_freq)
+                    start = sig_freq{index1};
+                    finish = sig_freq{index1};
+                            
+                    for index2 = index1 + 1:length(sig_freq)
+                        if sig_freq{index2} == finish + 1
+                            finish = sig_freq{index2};
+                        else
+                            break
+                        end
+                    end
+                            
+                    index1 = index2 + 1;
+                    consec_sig{r} = [start finish];
+                    r = r + 1;           
+                end
+                
                 yy_temp = get(gca, 'YLim');
                 yy_temp(2) = yy_temp(2)*1.1;
                 hold on;
                 plot([10 10], yy_temp, '-k')
-%                 start = 3;
-%                 for b = 1:length(sfreq)
-%                     % ttest
-%                     pval = signrank(nanmean(statistics.drug(k).occrall_pow{b, 1}, 2), ...
-%                         nanmean(statistics.drug(k).occrall_pow{b, 2}, 2));
-%                     if pval < 0.05/length(sfreq)      
-%                           pb = plot([start (freq(b)+freq(b+1))/2], [1 1]*yy_temp(2), ...
-%                               '-', 'color', 0.5*[0 1 0], 'linewidth', 2);
-%                           pb.Color(4) = 0.4;
-%                     end
-%                     start = (freq(b)+freq(b+1))/2;
-%                 end
-                % for stats
-                for b = 1:lenb
-                    pval = signrank(nanmean(statistics.drug(k).occrall_pow{b, 1}, 2), ...
-                        nanmean(statistics.drug(k).occrall_pow{b, 2}, 2));
-                    disp(['cond ' num2str(k) ':' bandnames{b} ', ' num2str(a) ', p=' num2str(pval*(2*lenb))])
-                    if pval < 0.05/(2*lenb)    
-                        disp([animals{a} ', ' bandnames{b} ', p = ' num2str(pval*lenb)])
-                          pb = plot(bandrange{b}, [1 1]*yy_temp(2), ...
-                              '-', 'color', [0.8000    0.9216    0.7725], 'linewidth', 2);
-                          pb.Color(4) = 0.4;
-                    end
-                end
+                
+                % Plot green lines over significant frequencies
+                if (~isempty(consec_sig))
+                    for tem = 1:length(consec_sig)
+                        x_pts = freq(consec_sig{tem});
+                        % Avoid issues with log scale using epsilon value
+                        if x_pts(1) == 0
+                            x_pts(1) = x_pts(1) + 10^-10;
+                        end
+                        plot(x_pts, ones(2)*yy_temp(2), ...
+                            '-', 'color', [0.8000    0.9216    0.7725 0.4], 'linewidth', 2); 
+                    end      
+                end             
 
                 % format
                 if yy_temp(1) < yy{1}(1)
@@ -825,7 +773,7 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'spectrogram'))==
                 if yy_temp(2) > yy{1}(2)
                     yy{1}(2) = yy_temp(2);
                 end
-%                 set(gca, 'YScale', 'log')
+                
                 set(gca, 'XScale', 'log')
                 xlim([3 48])
                 set(gca, 'box', 'off', 'tickdir', 'out', 'XScale', 'log')
@@ -852,9 +800,8 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'spectrogram'))==
                 for d = 1:2
                     mat{d}(nans, :) = [];
                     [me, sem] = weighted(mat{d}, ntr(cond, d));
-%                     me = mean(mat{d}, 1);
-%                     sem = std(mat{d}, [], 1)/sqrt(lenses - length(nans));
-                    fill_between(freq, me - sem, me + sem, cols(d, :), 0.1)
+
+                    fill_between(freq_fill, me - sem, me + sem, cols(d, :), 0.1)
                     hold on;
                     plot(freq, me, '-', 'color', cols(d, :))
                     hold on;            
@@ -904,10 +851,9 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'spectrogram'))==
                 clim = {zeros(1, 2), zeros(1, 2)};
                 for d = 1:2
                     subplot(lena*ndrug, 3, d + 3*(k-1) + ndrug*3*(a-1))
-%                     imagesc(spe_t, freq, squeeze(nanmean(Sall(cond, :, :, d), 1)));
+                    
                     h = pcolor(spe_t, freq, squeeze(nansum(Sall(cond, :, :, d), 1))./sum(ntr(cond, d)));
                     h.EdgeColor = 'none';
-%                     set(gca, 'YScale', 'log')
                     colormap(jet);
                     cl = caxis;
                     if cl(1) < clim{1}(1)
@@ -923,13 +869,10 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'spectrogram'))==
 
                 subplot(lena*ndrug, 3, 3 + 3*(k-1) + ndrug*3*(a-1))
                 S1 = squeeze(nansum(Sall(cond, :, :, 1), 1)./sum(ntr(cond, 1)));
-%                 S1 = S1 - repmat(nanmean(S1(:, spe_t <= 0), 2), 1, length(spe_t));
                 S2 = squeeze(nansum(Sall(cond, :, :, 2), 1)./sum(ntr(cond, 2)));
-%                 S2 = S2 - repmat(nanmean(S2(:, spe_t <= 0), 2), 1, length(spe_t));
-%                 imagesc(spe_t, freq, S1 - S2);
+                
                 h = pcolor(spe_t, freq, S1 - S2);
                 h.EdgeColor = 'none';
-%                 set(gca, 'YScale', 'log')
                 colormap(jet)
                 cl = caxis;
                 if cl(1) < clim{2}(1)
@@ -969,7 +912,7 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'spectrogram'))==
         for k = 1:lena*ndrug*3
             figure(j + 1 + s);
             subplot(lena*ndrug, 3, k)
-%             c = colorbar('northoutside');
+
             if mod(k, 3) == 1
                 caxis(clim{1})
 %                 c.Label.String = 'PSD (base)';
@@ -1017,8 +960,7 @@ end
 % coherence ==============================================
 if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'coherence'))==1
     disp('coherence analysis --------------------------------------')
-    % for circular statistics
-    addpath(genpath([mypath '/Katsuhisa/code/integrated/CircStat2012a']))
+
     switch datast{1}.stm.param
         case 'rc'
             bandnames = {'theta (3-7)', 'alpha (8-12)', 'beta (15-25)', 'gamma (40-48)'};
@@ -1341,13 +1283,3 @@ for i = 1:lenx
     s = s + x(i)*predictors(:, i);
 end
 mout = base*exp(s);
-
-function f = cost(x, y, base, predictors)
-mout = mymodel(x, base, predictors);
-f = 0;
-for i = 1:size(predictors, 1)
-    if mout(i) > 0
-        f = f - (y(i)*log(mout(i)) - mout(i));
-    end
-%     f = f + abs(mout(i) - y(i));
-end
