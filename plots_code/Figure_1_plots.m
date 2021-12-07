@@ -33,8 +33,11 @@ visualize_lfp_spk()
 % Give the figure window a name to distinguish it
 set(gcf, 'name', 'ka_258_20_base');
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path '/ka_258_20_base.fig'])
+savefig(figHandles(1), [save_path '/ka_258_20_base.fig'])
 
 %% Plot example drug LFP and its single unit recording
 
@@ -47,8 +50,11 @@ visualize_lfp_spk(ex, 'r');
 % Give the figure window a name to distinguish it
 set(gcf, 'name', 'ka_258_20_drug');
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path '/ka_258_20_5HT.fig'])
+savefig(figHandles(1), [save_path '/ka_258_20_5HT.fig'])
 
 %% Plot the mean firing rate plot
 
@@ -66,8 +72,11 @@ fig = gcf;
 delete(fig.Children(1).Children(2))
 delete(fig.Children(1).Children(1))
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path '/fr.fig'])
+savefig(figHandles(1), [save_path '/fr.fig'])
 
 
 %% Plot the Gain Change
@@ -78,7 +87,7 @@ plot_gain_change('Plotting');
 % Give the figure window a name to distinguish it
 set(gcf, 'name', 'gain_change');
 
-fig_list = findobj('Type', 'figure');
+figHandles = findobj('Type', 'figure');
 
 % Save the figure
-savefig(fig_list(1), [save_path '/gain_change.fig']);
+savefig(figHandles(1), [save_path '/gain_change.fig']);

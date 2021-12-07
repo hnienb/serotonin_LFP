@@ -38,8 +38,11 @@ anaT_sc = analysis_table(Lfps_sc, 'sc');
 % Plots each sessions's stLFP waveform (For drug condition)
 lfps_pair_batch_visualize(Lfps, 'sta', 'drug');
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path, '/sta_batch.fig'])
+savefig(figHandles(1), [save_path, '/sta_batch.fig'])
 
 
 %% Plot STA amplitudes (for drug conditions)
@@ -48,8 +51,11 @@ savefig([save_path, '/sta_batch.fig'])
 disp('Statistics for stLFP amplitudes for drug conditions:')
 plot_vars(anaT, 'sta amp base', 'sta amp drug')
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path, '/sta_amp.fig'])
+savefig(figHandles(1), [save_path, '/sta_amp.fig'])
 
 
 %% Plot STA amplitudes (for firing rate control)
@@ -61,8 +67,11 @@ savefig([save_path, '/sta_amp.fig'])
 disp('Statistics for stLFP amplitudes for firing rate control:')
 plot_vars(anaT_sc, 'sta amp base', 'sta amp drug')
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path, '/sta_amp_sc.fig'])
+savefig(figHandles(1), [save_path, '/sta_amp_sc.fig'])
 
 
 %% Plot the spike-LFP coherence for each session (For drug conditions)
@@ -76,8 +85,11 @@ fig = gcf;
 delete(fig.Children(1).Children(2))
 delete(fig.Children(1).Children(1))
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path, '/coh_scatter.fig'])
+savefig(figHandles(1), [save_path, '/coh_scatter.fig'])
 
 
 %% Plot the scatterplot for delta STA amp and delta LFP power
@@ -87,8 +99,11 @@ savefig([save_path, '/coh_scatter.fig'])
 disp('Statistics for delta STA amplitudes against delta LFP power:')
 plot_vars(anaT, 'd sta amp', 'd low-freq pow')
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path, '/sta_lowfreqpow.fig'])
+savefig(figHandles(1), [save_path, '/sta_lowfreqpow.fig'])
 
 
 %% Plots the STA for each drug condition and corresponding change in Power Spectra Density
@@ -96,8 +111,11 @@ savefig([save_path, '/sta_lowfreqpow.fig'])
 % Plots the multiplot
 lfps_pair_visualize(Lfps, 'sta', 'drug')
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path, '/sta_rc.fig'])
+savefig(figHandles(1), [save_path, '/sta_rc.fig'])
 
 
 %% Plots the STA for firing rate control and corresponding change in Power Spectra Density
@@ -105,6 +123,9 @@ savefig([save_path, '/sta_rc.fig'])
 % Plots the multiplot
 lfps_pair_visualize(Lfps_sc, 'sta', 'sc')
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path, '/sta_sc.fig'])
+savefig(figHandles(1), [save_path, '/sta_sc.fig'])
 

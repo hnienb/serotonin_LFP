@@ -44,8 +44,11 @@ fig = gcf;
 delete(fig.Children(1).Children(2))
 delete(fig.Children(1).Children(1))
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path '/gamma_scatter.fig'])
+savefig(figHandles(1), [save_path '/gamma_scatter.fig'])
 
 %% Plot Gamma Band Scatterplot for firing rate control
 
@@ -53,8 +56,11 @@ savefig([save_path '/gamma_scatter.fig'])
 disp('Statistics for Gamma Band Power for firing rate control:')
 plot_vars(anaT_sc, 'gamma pow base', 'gamma pow drug')
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path '/gamma_scatter_sc.fig'])
+savefig(figHandles(1), [save_path '/gamma_scatter_sc.fig'])
 
 
 %% Plot Low-Frequency Scatterplot for Drug Condition
@@ -68,8 +74,11 @@ fig = gcf;
 delete(fig.Children(1).Children(2))
 delete(fig.Children(1).Children(1))
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path '/lowfreq_scatter.fig'])
+savefig(figHandles(1), [save_path '/lowfreq_scatter.fig'])
 
 
 %% Plot Low-Frequency Scatterplot for Firing Rate Control
@@ -78,9 +87,11 @@ savefig([save_path '/lowfreq_scatter.fig'])
 disp('Statistics for Low-Frequency Band Power for firing rate control:')
 plot_vars(anaT_sc, 'low-freq pow base', 'low-freq pow drug')
 
-% Save the figure
-savefig([save_path '/lowfreq_scatter_sc.fig'])
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
 
+% Save the figure
+savefig(figHandles(1), [save_path '/lowfreq_scatter_sc.fig'])
 
 %% Plot the Power Spectra Density and Spectrogram for the Drug Conditions
 

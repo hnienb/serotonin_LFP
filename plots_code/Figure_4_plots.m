@@ -16,7 +16,6 @@ root_path = strjoin(parts(1:end-1), '/');
 dir_path = strjoin(parts(1:end-2), '/');
 data_path = [dir_path, '/resources/Data/'];
 addpath(genpath([dir_path, '/external_libraries/']))
-
 addpath([root_path, '/plot_functions']) % Plotting helper functions
 
 
@@ -42,8 +41,11 @@ delete(fig.Children(1).Children(1))
 delete(fig.Children(4).Children(2))
 delete(fig.Children(4).Children(1))
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path, '/corr_mi.fig'])
+savefig(figHandles(1), [save_path, '/corr_mi.fig'])
 
 %% Plot example LFP, predicted spike train and original spike train
 
@@ -67,5 +69,8 @@ savefig(drug_fig, [save_path, '/ka173_example200_drug.fig'])
 % Plots an example output of the spike triggered mixture model
 stm_example()
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Save the figure
-savefig([save_path, '/stm_example_ka278.fig'])
+savefig(figHandles(1), [save_path, '/stm_example_ka278.fig'])
