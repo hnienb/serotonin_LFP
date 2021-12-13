@@ -716,55 +716,11 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'spectrogram'))==
                     end
                 end
                 
-                % Find significance under Bonferroni corrected value
-                sig_freq = {};
-                r = 1;
-                for f = 1:lenf
-                    pval = signrank(mat{1}(:,f), mat{2}(:,f));
-                    if pval < 0.05/lenf
-                        sig_freq{r} = f;
-                        r = r + 1;
-                    end
-                end
-                
-                % Hacky way to find consecutive indices
-                r = 1;
-                consec_sig = {};
-                index1 = 1;
-                while index1 <= length(sig_freq)
-                    start = sig_freq{index1};
-                    finish = sig_freq{index1};
-                            
-                    for index2 = index1 + 1:length(sig_freq)
-                        if sig_freq{index2} == finish + 1
-                            finish = sig_freq{index2};
-                        else
-                            break
-                        end
-                    end
-                            
-                    index1 = index2 + 1;
-                    consec_sig{r} = [start finish];
-                    r = r + 1;           
-                end
+               
                 
                 yy_temp = get(gca, 'YLim');
                 yy_temp(2) = yy_temp(2)*1.1;
-                hold on;
-                plot([10 10], yy_temp, '-k')
-                
-                % Plot green lines over significant frequencies
-                if (~isempty(consec_sig))
-                    for tem = 1:length(consec_sig)
-                        x_pts = freq(consec_sig{tem});
-                        % Avoid issues with log scale using epsilon value
-                        if x_pts(1) == 0
-                            x_pts(1) = x_pts(1) + 10^-10;
-                        end
-                        plot(x_pts, ones(2)*yy_temp(2), ...
-                            '-', 'color', [0.8000    0.9216    0.7725 0.4], 'linewidth', 2); 
-                    end      
-                end             
+                hold on;           
 
                 % format
                 if yy_temp(1) < yy{1}(1)
