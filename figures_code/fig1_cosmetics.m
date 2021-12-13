@@ -51,6 +51,13 @@ ax_old = axesObjs(1);
 
 % copy the old object to the new axis
 copyobj(ax_old.Children, ax_new); delete(fig);
+
+% Plot a depiction of 100ms for time reference
+hold on
+plot([1.800, 1.900], [-200, -200], 'LineWidth', 1.25, 'Color', 'Black')
+hold off
+
+% Make axis invisible
 axis off 
 
 % ==========================================================
