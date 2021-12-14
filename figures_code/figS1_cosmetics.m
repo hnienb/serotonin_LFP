@@ -317,6 +317,11 @@ for a = 1:2 % animals
         xlim(stac*[-1 1])
         ylim([3 48])
         
+         % Change the dashed line at x = 0 to black
+        child = get(gca, 'Children');
+        set(child(1), 'Color', [0 0 0]);
+        set(child(1), 'LineWidth', 0.5);
+        
         set(gca, 'XTick', [-stac 0 stac])
         set(gca, 'YTick', [3 48])
         xlabel('time after spike (sec)', 'fontsize', 6)
@@ -388,6 +393,11 @@ for a = 1:2 % animals
     caxis(crange(a, :))
     xlim(stac*[-1 1])
     ylim([3 48])
+    
+    % Change the dashed line at x = 0 to black
+    child = get(gca, 'Children');
+    set(child(1), 'Color', [0 0 0]);
+    set(child(1), 'LineWidth', 0.5);
 
     set(gca, 'XTick', [-stac 0 stac])
     set(gca, 'YTick', [3 48])

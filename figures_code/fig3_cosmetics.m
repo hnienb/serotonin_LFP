@@ -322,7 +322,12 @@ for a = 1:2 % animals
         set(gca, 'YTick', [3 48])
         xlabel('time after spike (sec)', 'fontsize', 6)
         ylabel('frequency (Hz)', 'fontsize', 6)
-        title(['\Delta PSD (baseline - ' drugs{d} ')'], 'fontsize', 6)       
+        title(['\Delta PSD (baseline - ' drugs{d} ')'], 'fontsize', 6)
+        
+        % Change color of the dashed line at 0 to black=
+        child = get(gca, 'Children');
+        set(child(1), 'Color', [0 0 0]);
+        set(child(1), 'LineWidth', 0.5);
 
         % offset axis
         offset_axis(0.05, axPars)
@@ -395,6 +400,11 @@ for a = 1:2 % animals
     xlabel('time after spike (sec)', 'fontsize', 6)
     ylabel('frequency (Hz)', 'fontsize', 6)
     title(['\Delta PSD (high - low FR)'], 'fontsize', 6)
+    
+    % Change the dashed line at x = 0 to black
+    child = get(gca, 'Children');
+    set(child(1), 'Color', [0 0 0]);
+    set(child(1), 'LineWidth', 0.5);
 
     % offset axis
     offset_axis(0.05, axPars)
