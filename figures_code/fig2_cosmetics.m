@@ -58,7 +58,6 @@ c = ax_old.Children(2).CData;
 delete(fig);
 
 % plot
-plot(ax_new, [0 0], [0 48], '--w', 'linewidth', 0.5);
 hold(ax_new, 'on')
 h = pcolor(ax_new, x, y, c);
 h.EdgeColor = 'none';
@@ -66,9 +65,11 @@ h.EdgeColor = 'none';
 % format
 caxis(crange)
 colormap(map)
+hold on
+plot(ax_new, [0 0], [3 48], '--', 'linewidth', 0.5, 'Color', [0.5 0.5 0.5]);
 xlim([-0.1 2])
 ylim([3 48])
-set(gca, 'XTick', [0 2])
+set(gca, 'XTick', [0 0.8 2])
 set(gca, 'YTick', [3 10 48])
 set(gca, 'YScale', 'log')
 title('baseline - NaCl (n = 17)', 'fontsize', 6)
@@ -76,7 +77,11 @@ xlabel('time after stimulus onset (sec)', 'fontsize', 6)
 ylabel('frequency (Hz)', 'fontsize', 6)
 
 % offset axis
-offset_axis(0.05, axPars)
+a1 = offset_axis(0.05, axPars);
+set(a1, 'YScale', 'log')
+set(a1, 'YMinorTick', 'off')
+
+
 
 % ==========================================================
 % 5HT =======================================
@@ -100,7 +105,6 @@ delete(fig);
 h = pcolor(ax_new, x, y, c);
 h.EdgeColor = 'none';
 hold(ax_new, 'on')
-plot(ax_new, [0 0], [0 48], '--w', 'linewidth', 0.5);
 
 % format
 caxis(crange)
@@ -115,6 +119,10 @@ colormap(map)
 
 caxis(crange)
 colormap(jet)
+
+hold on
+plot(ax_new, [0 0], [3 48], '--', 'linewidth', 0.5, 'Color', [0.5 0.5 0.5]);
+
 xlim([-0.1 2])
 ylim([3 48])
 set(gca, 'XTick', [0 2])
@@ -125,7 +133,10 @@ xlabel('time after stimulus onset (sec)', 'fontsize', 6)
 ylabel('frequency (Hz)', 'fontsize', 6)
 
 % offset axis
-offset_axis(0.05, axPars)
+a1 = offset_axis(0.05, axPars);
+set(a1, 'YScale', 'log')
+set(a1, 'YMinorTick', 'off')
+
 
 % ==========================================================
 % FR =======================================
@@ -149,11 +160,14 @@ delete(fig);
 h = pcolor(ax_new, x, y, c);
 h.EdgeColor = 'none';
 hold(ax_new, 'on')
-plot(ax_new, [0 0], [0 48], '--w', 'linewidth', 0.5);
 
 % format
 caxis(crange)
 colormap(map)
+
+hold on
+plot(ax_new, [0 0], [3 48], '--', 'linewidth', 0.5, 'Color', [0.5 0.5 0.5]);
+
 xlim([-0.1 2])
 ylim([3 48])
 set(gca, 'XTick', [0 2])
@@ -164,7 +178,9 @@ xlabel('time after stimulus onset (sec)', 'fontsize', 6)
 ylabel('frequency (Hz)', 'fontsize', 6)
 
 % offset axis
-offset_axis(0.05, axPars)
+a1 = offset_axis(0.05, axPars);
+set(a1, 'YScale', 'log')
+set(a1, 'YMinorTick', 'off')
 
 %%
 % spectrum ==========================================================
@@ -201,7 +217,7 @@ xlabel('frequency (Hz)', 'fontsize', 6)
 ylabel('power (a.u.)', 'fontsize', 6)
 
 % offset axis
-offset_axis(0.05, axPars)
+offset_axis(0.05, axPars);
 
 % ==========================================================
 % 5HT =======================================
