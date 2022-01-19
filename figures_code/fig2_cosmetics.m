@@ -203,7 +203,7 @@ copyobj(ax_old.Children, ax_new); delete(fig);
 % Add line depictions for the bandranges analyzed
 hold on
 plot([3 10], [0 0], 'LineWidth', 2, 'Color', [0.10 0.52 1 0.4]) % Low freq
-plot([40 48], [0 0], 'LineWidth', 2, 'Color', [1 0.5 0.04 0.4]) % Gamma
+plot([30 48], [0 0], 'LineWidth', 2, 'Color', [1 0.5 0.04 0.4]) % Gamma
 
 % format
 xlim([3 48])
@@ -237,7 +237,7 @@ copyobj(ax_old.Children, ax_new); delete(fig);
 % Add line depictions for the bandranges analyzed
 hold on
 plot([3 10], [0 0], 'LineWidth', 2, 'Color', [0.10 0.52 1 0.4]) % Low freq
-plot([40 48], [0 0], 'LineWidth', 2, 'Color', [1 0.5 0.04 0.4]) % Gamma
+plot([30 48], [0 0], 'LineWidth', 2, 'Color', [1 0.5 0.04 0.4]) % Gamma
 
 % format
 xlim([3 48])
@@ -271,7 +271,7 @@ copyobj(ax_old.Children, ax_new); delete(fig);
 % Add line depictions for the bandranges analyzed
 hold on
 plot([3 10], [0 0], 'LineWidth', 2, 'Color', [0.10 0.52 1 0.4]) % Low freq
-plot([40 48], [0 0], 'LineWidth', 2, 'Color', [1 0.5 0.04 0.4]) % Gamma
+plot([30 48], [0 0], 'LineWidth', 2, 'Color', [1 0.5 0.04 0.4]) % Gamma
 
 % format
 xlim([3 48])
@@ -295,7 +295,7 @@ offset_axis(0.05, axPars)
 % drug
 pcol = [0.2549    0.6706    0.3647];
 fnames = {'lowfreq_scatter', 'gamma_scatter'};
-tnames = {'low-frequency (< 10Hz)', 'gamma (> 40Hz)'};
+tnames = {'low-frequency (\leq 10Hz)', 'gamma (\geq 30Hz)'};
 tcolors = {[0.10 0.52 1], [1 0.5 0.04]};
 ranges = {[0.015, 0.025; 0.005, 0.035], [0.5, 2.7; 0.1, 3.5].*0.001} ;
 pvals = cell(1, 2);
