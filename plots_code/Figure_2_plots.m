@@ -39,11 +39,6 @@ anaT_sc = analysis_table(Lfps_sc, 'sc');
 disp('Statistics for Gamma Band Power for drug conditions:')
 plot_vars(anaT, 'gamma pow base', 'gamma pow drug')
 
-% Remove p-val significance marker from the plot
-fig = gcf;
-delete(fig.Children(1).Children(2))
-delete(fig.Children(1).Children(1))
-
 % Obtain the last created figure handle
 figHandles = findobj('Type', 'figure');
 
