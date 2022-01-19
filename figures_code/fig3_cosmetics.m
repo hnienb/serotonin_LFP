@@ -160,7 +160,7 @@ text(xrange(1)+0.01*(xrange(2)-xrange(1)), yrange(2) - 0.05*(yrange(2)-yrange(1)
     ['n = ' num2str(size(data{1}{2}, 2) + size(data{2}{2}, 2))], 'color', cols(2, :), 'fontsize', 6)
 text(xrange(1)+0.01*(xrange(2)-xrange(1)), yrange(2) - 0.15*(yrange(2)-yrange(1)), ...
     ['n = ' num2str(size(data{1}{1}, 2) + size(data{2}{1}, 2))], 'color', cols(1, :), 'fontsize', 6)
-title({'spike-LFP coherence', '(< 10Hz)'}, 'fontsize', 6)
+title({'spike-LFP coherence', '(\leq 10Hz)'}, 'fontsize', 6)
 
 % offset axis
 offset_axis(0.05, axPars)
