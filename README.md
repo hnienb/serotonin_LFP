@@ -32,8 +32,8 @@ Each .mat file includes a struct *ex* with the following information:
 - **Trials**: Includes information about trials (see below)
 
 *ex.Trials* contains the following information:
-- **st**: Might remove this
-- **me**: Might remove this
+- **st**: Boolean value if stimulus was presented during trial
+- **me**: Placeholder value for blank stimulus, if necessary
 - **or**: Orientation used for grating stimulus for the trial
 - **co**: Contrast used for grating stimulus for the trial
 - **TrialEnd**: End time of trial (in sec)
@@ -76,5 +76,48 @@ Each Lfps_rc.mat includes a struct with the following information:
 
 ## Code
 
-## TODO List - Remove when finished
-*TODO: Check if trial information is also stored in the LFP files*
+### Preprocessing
+The central file used for data analysis is *runAlllfp.m*, located in /analysis_code.
+This file uses arguments to specify which analysis step to carry out, defaulting to
+"all". The following possible values are:
+- **"filter"**: Iterates through the session raw files and preprocesses the LFP
+  data. **Note**: This step has to be run first for all non-MP and non-c2s data.
+- **"MP"**: Iterates through the session raw files and preprocesses the LFP data
+  using the [MP algorithm](https://github.com/supratimray/MP). **Note**: This step has to be run first for all MP data
+  and this will expectedly run for multiple hours.
+- **"c2sFormat"**: Iterates through the session raw files and organizes the data
+  such that the [c2s algorithm](https://github.com/jonasrauber/c2s-docker) (Spike-triggered mixture model) can read it.
+- **"lfps_pair"**: Converts the individual preprocessed data into a single struct
+  for later analysis.
+- **"lfps_pair_nothin_sc"**: Converts the individual preprocessed data into a
+  single struct for later analysis, using an algorithm to match the spike rate
+  ratio induced by 5HT application.
+- **"lfps_pair_mp"**: Converts the MP individual preprocessed data into a single
+  struct for later analysis.
+- **"lfps_pair_mp_nothin_sc"**: Converts the MP individual preprocessed data into
+  a single struct for later analysis, using an algorithm to match the spike rate
+  ratio induced by 5HT application.
+
+This code greatly benefits from using the Matlab Parallel Computing Toolbox.
+
+**Note**: After running "c2sFormat", run *fix_data_dim.m*, located in /analysis_code.
+This will split the data into baseline, drug, and FR control high/low. After this,
+use a BASH-supported terminal to run the c2s algorithm as follows:
+`source run_c2s.sh`
+
+This will additionally require [Docker](https://docs.docker.com/get-docker/) to be installed.
+
+### Plotting
+Each of the paper's figures are correspondingly generated from the files included
+in /plots_code/ and /figures_code/. First run the files in /plots_code/ and then
+run the files in /figures_code/.
+
+### External Libraries
+This additional libraries will need to be installed for the analysis and plotting
+code to run properly. Download these and place them in the /external_libraries/
+directory.
+
+- **[cbrewer](https://www.mathworks.com/matlabcentral/fileexchange/34087-cbrewer-colorbrewer-schemes-for-matlab)** (from Mathworks File Exchange)
+- **[MP](https://github.com/supratimray/MP)** (may have to generate the executable file)
+- **[Circular Statistics Toolbox](https://github.com/mrkrause/circstat-matlab)**
+- **[Chronux Toolbox](http://chronux.org/)**
