@@ -30,6 +30,9 @@ Each .mat file includes a struct *ex* with the following information:
     - **vals**: Values of the stimulus type used in the session
   - **e2**: (Optional) Second experiment, same format as *e1*
 - **Trials**: Includes information about trials (see below)
+- **refreshRate**: Refresh rate of the stimulus monitor
+- **VisStimVersion**: (Optional) Some sessions used stimulus presentation version
+  that requires manual adjustment for times
 
 *ex.Trials* contains the following information:
 - **st**: Boolean value if stimulus was presented during trial
@@ -42,16 +45,18 @@ Each .mat file includes a struct *ex* with the following information:
 - **Reward**: Specifies whether the subject response was correct (1) or the trials was discarded (0) [Only trials that are 1 are valid trials]
 - **RewardSize**: Size of the reward delivered
 - **Spikes**: Spike times (relative to TrialStart), in sec
--**LFP**: Measured LFP voltage for the trial
--**LFP_ts**: Time points corresponding to LFP voltages
--**times_fpOn**: Time (in sec) when fixation point begins presentation
+- **LFP**: Measured LFP voltage for the trial
+- **LFP_ts**: Time points corresponding to LFP voltages
+- **times_fpOn**: Time (in sec) when fixation point begins presentation
+- **or_seq**: Sequence of orientation values presented during the trial
+
 
 
 Following preprocessing and filtering, these raw session .mat files are used to
-create compiled Lfps_rc.mat files. There are corresponding versions for MP-processed
+create compiled *Lfps_rc.mat* files. There are corresponding versions for MP-processed
 data, spike-count separated data, and combined MP/spike-count data, as well.
 
-Each Lfps_rc.mat includes a struct with the following information:
+Each *Lfps_rc.mat* file includes a struct with the following information:
 - **lfp_list**: A list of pairs of baseline and drug condition sessions' filenames
 - **animal**: A boolean list containing animal ID (1 if Mango, 0 if Kaki)
 - **is5ht**: A boolean list containing drug ID (1 if serotonin, 0 if saline control)
@@ -77,14 +82,13 @@ Each Lfps_rc.mat includes a struct with the following information:
 ## Code
 
 ### Preprocessing
-The central file used for data analysis is *runAlllfp.m*, located in /analysis_code.
+The central file used for data analysis is *runAlllfp.m*, located in **/analysis_code/**.
 This file uses arguments to specify which analysis step to carry out, defaulting to
 "all". The following possible values are:
 - **"filter"**: Iterates through the session raw files and preprocesses the LFP
   data. **Note**: This step has to be run first for all non-MP and non-c2s data.
 - **"MP"**: Iterates through the session raw files and preprocesses the LFP data
-  using the [MP algorithm](https://github.com/supratimray/MP). **Note**: This step has to be run first for all MP data
-  and this will expectedly run for multiple hours.
+  using the [MP algorithm](https://github.com/supratimray/MP). **Note**: This step has to be run first for all MP data and this will expectedly run for multiple hours.
 - **"c2sFormat"**: Iterates through the session raw files and organizes the data
   such that the [c2s algorithm](https://github.com/jonasrauber/c2s-docker) (Spike-triggered mixture model) can read it.
 - **"lfps_pair"**: Converts the individual preprocessed data into a single struct
@@ -98,24 +102,29 @@ This file uses arguments to specify which analysis step to carry out, defaulting
   a single struct for later analysis, using an algorithm to match the spike rate
   ratio induced by 5HT application.
 
-This code greatly benefits from using the Matlab Parallel Computing Toolbox.
+This code greatly benefits from using the Matlab Parallel Computing Toolbox. Due
+to the immense size of the intermediate data files, it is recommended to run this
+processing code on a hard drive with at least 170GB and decent read/write speeds.
 
-**Note**: After running "c2sFormat", run *fix_data_dim.m*, located in /analysis_code.
-This will split the data into baseline, drug, and FR control high/low. After this,
-use a BASH-supported terminal to run the c2s algorithm as follows:
+**Note**: After running "c2sFormat" in *runAlllfp.m*, run *fix_data_dim.m*,
+located in /analysis_code. This will split the data into baseline, drug, and FR
+control high/low. After this, use a BASH-supported terminal to run the c2s algorithm as follows:
 `source run_c2s.sh`
 
 This will additionally require [Docker](https://docs.docker.com/get-docker/) to be installed.
 
+After running *run_c2s.sh*, run *extract_c2s.m* (located in **/analysis_code/**),
+which will condense the individual data files into a singular matrix for analysis.
+
 ### Plotting
 Each of the paper's figures are correspondingly generated from the files included
-in /plots_code/ and /figures_code/. First run the files in /plots_code/ and then
-run the files in /figures_code/.
+in **/plots_code/** and **/figures_code/**. First run the files in **/plots_code/**
+and then run the files in **/figures_code/**.
 
 ### External Libraries
 This additional libraries will need to be installed for the analysis and plotting
-code to run properly. Download these and place them in the /external_libraries/
-directory.
+code to run properly. Download these and place them in the **/external_libraries/**
+directory (may have to create the directory first in the root folder).
 
 - **[cbrewer](https://www.mathworks.com/matlabcentral/fileexchange/34087-cbrewer-colorbrewer-schemes-for-matlab)** (from Mathworks File Exchange)
 - **[MP](https://github.com/supratimray/MP)** (may have to generate the executable file)
