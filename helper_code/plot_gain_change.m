@@ -24,7 +24,7 @@ end
 root_path = strjoin(parts(1:end-1), '/');
 load_path = [strjoin(parts(1:end-2), '/'), '/resources/Data/LFPprepro/'];
 save_path = [strjoin(parts(1:end-2), '/'), '/resources/Data/others/'];
-addpath(genpath([root_path, '/plots_code/HN Fcts/']))
+
 if ~exist(save_path, 'dir'); mkdir(save_path); end
 
 %% Load the ex data from the raw data files
