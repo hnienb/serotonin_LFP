@@ -10,13 +10,12 @@ else
     parts = strsplit(path, '/');
 end
 
-root_path = strjoin(parts(1:end-1), '/');
+root_path = strjoin(parts(1:end-2), '/');
 
 % For data
-dir_path = strjoin(parts(1:end-2), '/');
-data_path = [dir_path, '/resources/Data/'];
+data_path = [root_path, '/resources/Data/'];
 
-addpath([root_path, '/plot_functions']) % Plotting helper functions
+addpath([root_path, '/helper_code']) % Plotting helper functions
 
 %% Create the subplot folder if needed, save figures there
 save_path = [strjoin(parts(1:end-2), '/'), '/resources/Figure_S1/subplots/'];
@@ -36,7 +35,7 @@ anaT_sc = analysis_table(Lfps_sc, 'sc');
 %% Plot stLFP sessions (for drug condition)
 
 % Plots each sessions's stLFP waveform (For drug condition)
-lfps_pair_batch_visualize(Lfps, 'sta', 'drug');
+lfps_pair_visualize(Lfps, 'sta_batch', 'drug');
 
 % Obtain the last created figure handle
 figHandles = findobj('Type', 'figure');
@@ -51,13 +50,13 @@ savefig(figHandles(1), [save_path, '/sta_batch_mp.fig'])
 disp('Statistics for stLFP amplitudes for drug conditions:')
 plot_vars(anaT, 'sta amp base', 'sta amp drug')
 
+% Obtain the last created figure handle
+figHandles = findobj('Type', 'figure');
+
 % Remove p-val significance marker from the plot
 fig = gcf;
 delete(fig.Children(1).Children(2))
 delete(fig.Children(1).Children(1))
-
-% Obtain the last created figure handle
-figHandles = findobj('Type', 'figure');
 
 % Save the figure
 savefig(figHandles(1), [save_path, '/sta_amp_mp.fig'])

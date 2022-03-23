@@ -10,17 +10,16 @@ else
     parts = strsplit(path, '/');
 end
 
-root_path = strjoin(parts(1:end-1), '/');
+root_path = strjoin(parts(1:end-2), '/');
 
 % For data
-dir_path = strjoin(parts(1:end-2), '/');
-data_path = [dir_path, '/resources/Data/'];
-addpath(genpath([dir_path, '/external_libraries/']))
-addpath([root_path, '/plot_functions']) % Plotting helper functions
+data_path = [root_path, '/resources/Data/'];
+addpath(genpath([root_path, '/external_libraries/']))
+addpath([root_path, '/helper_code/']) % Plotting helper functions
 
 
 %% Create the subplot folder if needed, save figures there
-save_path = [strjoin(parts(1:end-2), '/'), '/resources/Figure_4/subplots/'];
+save_path = [root_path, '/resources/Figure_4/subplots/'];
 
 if ~exist(save_path, 'dir') % Check if folder exists
     mkdir(save_path)
@@ -64,13 +63,3 @@ drug_fig = figHandles(1);
 savefig(base_fig, [save_path, '/ka173_example200_base.fig'])
 savefig(drug_fig, [save_path, '/ka173_example200_drug.fig'])
 
-%% Plot an example output of the spike triggered mixture model
-
-% Plots an example output of the spike triggered mixture model
-stm_example()
-
-% Obtain the last created figure handle
-figHandles = findobj('Type', 'figure');
-
-% Save the figure
-savefig(figHandles(1), [save_path, '/stm_example_ka278.fig'])

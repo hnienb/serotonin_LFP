@@ -3,20 +3,18 @@ close all
 
 % Get the 'relative' folder path to get the resource folderpath
 path = mfilename( 'fullpath' );
-
 if ispc % Windows file system
     parts = strsplit(path, '\');
 else
     parts = strsplit(path, '/');
 end
 
-root_path = strjoin(parts(1:end-1), '/');
+root_path = strjoin(parts(1:end-2), '/');
 
 % For data
-dir_path = strjoin(parts(1:end-2), '/');
-data_path = [dir_path, '/resources/Data/'];
+data_path = [root_path, '/resources/Data/'];
 
-addpath([root_path, '/plot_functions']) % Plotting helper functions
+addpath([root_path, '/helper_code/']) % Plotting helper functions
 
 %% Create the subplot folder if needed, save figures there
 save_path = [strjoin(parts(1:end-2), '/'), '/resources/Figure_2/subplots/'];
@@ -41,6 +39,11 @@ plot_vars(anaT, 'gamma pow base', 'gamma pow drug')
 
 % Obtain the last created figure handle
 figHandles = findobj('Type', 'figure');
+
+% Remove p-val significance marker from the plot
+fig = gcf;
+delete(fig.Children(1).Children(2))
+delete(fig.Children(1).Children(1))
 
 % Save the figure
 savefig(figHandles(1), [save_path '/gamma_scatter.fig'])
@@ -81,6 +84,7 @@ savefig(figHandles(1), [save_path '/lowfreq_scatter.fig'])
 % Plots scatterplots for the Low-Frequency power between low/high firing rate trials
 disp('Statistics for Low-Frequency Band Power for firing rate control:')
 plot_vars(anaT_sc, 'low-freq pow base', 'low-freq pow drug')
+
 
 % Obtain the last created figure handle
 figHandles = findobj('Type', 'figure');

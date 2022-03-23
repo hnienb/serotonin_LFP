@@ -10,13 +10,12 @@ else
     parts = strsplit(path, '/');
 end
 
-root_path = strjoin(parts(1:end-1), '/');
+root_path = strjoin(parts(1:end-2), '/');
 
 % For data
-dir_path = strjoin(parts(1:end-2), '/');
-data_path = [dir_path, '/resources/Data/'];
+data_path = [root_path, '/resources/Data/'];
 
-addpath([root_path, '/plot_functions']) % Plotting helper functions
+addpath(genpath([root_path, '/helper_code'])) % Plotting helper functions
 
 %% Create the subplot folder if needed, save figures there
 save_path = [strjoin(parts(1:end-2), '/'), '/resources/Figure_1/subplots/'];
@@ -42,7 +41,7 @@ savefig(figHandles(1), [save_path '/ka_258_20_base.fig'])
 %% Plot example drug LFP and its single unit recording
 
 % Load the data
-load([data_path, '/LFPprepro/ka_0258_c1_sortLH_17.33.grating.ORxRC_5HT.mat']);
+load([data_path, '/LFPprepro/filtered/ka_0258_c1_sortLH_17.33.grating.ORxRC_5HT.mat']);
         
 % Plots session ka_258 5HT data, trial 20
 visualize_lfp_spk(ex, 'r');
@@ -82,7 +81,7 @@ savefig(figHandles(1), [save_path '/fr.fig'])
 %% Plot the Gain Change
 
 % Load, process, and analysis the data to plot gain change
-plot_gain_change('Plotting');
+plot_gain_change();
 
 % Give the figure window a name to distinguish it
 set(gcf, 'name', 'gain_change');
