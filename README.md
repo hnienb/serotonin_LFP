@@ -5,6 +5,9 @@ Custom analysis code for [authorship]. Serotonergic modulation of local network 
 ## Data
 Source data needed to recreate paper figures
 
+MP-processed LFP data is not included due file-size constraints, but it can be
+replicated using the available code (see below). 
+
 #### Format
 The spiking information and LFP information are stored in separate files with the following naming convention:
 
