@@ -204,7 +204,7 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'Plotting'))==1
     % Histogram for relative gain change (x-axis)
     ax1 = subplot(5, 5, [1,4]);
     plotHist([s_fit_results.b1], logical(drug_labels), ax1, 'log');
-    set(gca, 'XScale', 'log', 'XTick', [], 'YTick', [0, 14]);
+    set(gca, 'XScale', 'log', 'XTick', [], 'YTick', [0, 12]);
     ax1.LineWidth = 1;
     title('');
 
