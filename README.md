@@ -117,7 +117,7 @@ control high/low. After this, use a BASH-supported terminal to run the c2s algor
 This will additionally require [Docker](https://docs.docker.com/get-docker/) to be installed.
 
 After running *run_c2s.sh*, run *extract_c2s.m* (located in **/analysis_code/**),
-which will condense the individual data files into a singular matrix for analysis.
+which will condense the individual data files into a singular matrix for analysis (*met_cv10.mat*).
 
 ### Plotting
 Each of the paper's figures are correspondingly generated from the files included
