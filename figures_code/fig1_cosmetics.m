@@ -12,8 +12,8 @@ end
 
 dir_path = strjoin(parts(1:end-2), '/');
 
-root_path = strjoin(parts(1:end-2), '/');
-addpath(genpath([root_path, '/external_libraries/']));
+addpath(genpath([dir_path, '/external_libraries/']));
+addpath(genpath([dir_path, '/helper_code/']));
 
 
 [figPars, axPars] = setPlotPars;

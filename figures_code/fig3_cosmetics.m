@@ -10,6 +10,7 @@ else
 end
 
 dir_path = strjoin(parts(1:end-2), '/');
+addpath(genpath([dir_path, '/helper_code/']));
 
 [figPars, axPars] = setPlotPars;
 figPos = [5 5 21 20]; % this is in cm
@@ -58,9 +59,9 @@ nspk = ax_old.Children(2).String;
 copyobj(ax_old.Children(5), ax_new); delete(fig);
  
 xlim(stac*[-1 1])
-ylim([-0.75 0.75]) % Widened the range to properly fit the plot
+ylim([-0.80 0.80]) % Widened the range to properly fit the plot
 set(gca, 'XTick', [-stac 0 stac])
-set(gca, 'YTick', [-0.75 0 0.75])
+set(gca, 'YTick', [-0.80 0 0.80])
 xlabel('time after spike (sec)', 'fontsize', 6)
 ylabel('LFP (a.u.)', 'fontsize', 6)
 text(-0.065, 0.65, 'k258', 'fontsize', 6)

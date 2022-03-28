@@ -10,6 +10,7 @@ else
 end
 
 dir_path = strjoin(parts(1:end-2), '/');
+addpath(genpath([dir_path, '/helper_code']));
 
 [figPars, axPars] = setPlotPars;
 figPos = [5 5 21 20]; % this is in cm

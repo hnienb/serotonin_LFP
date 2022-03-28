@@ -10,6 +10,7 @@ else
 end
 
 dir_path = strjoin(parts(1:end-2), '/');
+addpath(genpath([dir_path, '/helper_code']));
 
 [figPars, axPars] = setPlotPars;
 figPos = [5 5 21 20]; % this is in cm
@@ -28,8 +29,8 @@ addpath(figpath)
 
 cols = [0 0 0; 1 0 0];
 mrcs = {'o', 'square'};
-xlabs = {'Baseline', 'Baseline', 'High FR'};
-ylabs = {'NaCl', '5HT', 'Low FR'};
+xlabs = {'baseline', 'baseline', 'high FR'};
+ylabs = {'NaCl', '5HT', 'low FR'};
 monkey = {'kaki', 'mango', 'all'};
 nses = [13, 16; 4, 37];
 msz = {7,10};
@@ -144,9 +145,9 @@ for c = 1:6
     
     % correlation
     if c==2
-        title('Pearson Correlation Coefficient', 'fontsize', 6)
+        title('Pearson correlation coefficient', 'fontsize', 6)
     elseif c==5
-        title('Information Gain', 'fontsize', 6)
+        title('Information gain (bits per bin)', 'fontsize', 6)
     end
 
     % offset axis
