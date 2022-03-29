@@ -39,7 +39,7 @@ else
 end
 
 % Path finding for external libraries
-dir_path = strjoin(parts(1:end-3), '/');
+dir_path = strjoin(parts(1:end-2), '/');
 
 % For saving data table
 data_path = [dir_path, '/resources/Data/tables/'];
