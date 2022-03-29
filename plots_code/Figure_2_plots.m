@@ -14,7 +14,7 @@ root_path = strjoin(parts(1:end-2), '/');
 % For data
 data_path = [root_path, '/resources/Data/'];
 
-addpath([root_path, '/helper_code/']) % Plotting helper functions
+addpath(genpath([root_path, '/helper_code/'])) % Plotting helper functions
 
 %% Create the subplot folder if needed, save figures there
 save_path = [strjoin(parts(1:end-2), '/'), '/resources/Figure_2/subplots/'];
