@@ -73,9 +73,10 @@ ylim([3 48])
 set(gca, 'XTick', [0 0.8 2])
 set(gca, 'YTick', [3 10 48])
 set(gca, 'YScale', 'log')
-title('baseline - NaCl (n = 17)', 'fontsize', 6)
-xlabel('time after stimulus onset (sec)', 'fontsize', 6)
-ylabel('frequency (Hz)', 'fontsize', 6)
+set(gca, 'FontName', 'Arial')
+title('baseline - NaCl (n = 17)', 'fontsize', 6, 'fontname', 'Arial')
+xlabel('time after stimulus onset (sec)', 'fontsize', 6, 'fontname', "Arial")
+ylabel('frequency (Hz)', 'fontsize', 6, 'fontname', "Arial")
 
 % offset axis
 a1 = offset_axis(0.05, axPars);
@@ -115,6 +116,7 @@ c.Ticks = [crange(1) 0 crange(2)];
 c.TickDirection = 'out';
 c.Position(1) = c.Position(1)*1.4;
 c.FontSize = 6;
+c.FontName = "Arial";
 
 colormap(map)
 
@@ -128,10 +130,11 @@ xlim([-0.1 2])
 ylim([3 48])
 set(gca, 'XTick', [0 2])
 set(gca, 'YTick', [3 10 48])
+set(gca, 'FontName', "Arial")
 set(ax_new, 'YScale', 'log')
-title('baseline - 5HT (n = 51)', 'fontsize', 6)
-xlabel('time after stimulus onset (sec)', 'fontsize', 6)
-ylabel('frequency (Hz)', 'fontsize', 6)
+title('baseline - 5HT (n = 51)', 'fontsize', 6, 'fontname', 'Arial')
+xlabel('time after stimulus onset (sec)', 'fontsize', 6, 'fontname', 'Arial')
+ylabel('frequency (Hz)', 'fontsize', 6, 'fontname', 'Arial')
 
 % offset axis
 a1 = offset_axis(0.05, axPars);
@@ -174,9 +177,10 @@ ylim([3 48])
 set(gca, 'XTick', [0 2])
 set(gca, 'YTick', [3 10 48])
 set(gca, 'YScale', 'log')
-title('high FR - low FR (n = 68)', 'fontsize', 6)
-xlabel('time after stimulus onset (sec)', 'fontsize', 6)
-ylabel('frequency (Hz)', 'fontsize', 6)
+set(gca, 'FontName', 'Arial')
+title('high FR - low FR (n = 68)', 'fontsize', 6, 'fontname', 'Arial')
+xlabel('time after stimulus onset (sec)', 'fontsize', 6, 'fontname', 'Arial')
+ylabel('frequency (Hz)', 'fontsize', 6, 'fontname', 'Arial')
 
 % offset axis
 a1 = offset_axis(0.05, axPars);
@@ -212,10 +216,11 @@ ylim(yy)
 set(gca, 'XTick', [3 48])
 set(gca, 'XScale', 'log')
 set(gca, 'YTick', yy)
-text(35, 0.024,'baseline', 'color', 'k', 'fontsize', 6)
-text(35, 0.02,'NaCl', 'color', 'r', 'fontsize', 6)
-xlabel('frequency (Hz)', 'fontsize', 6)
-ylabel('power (a.u.)', 'fontsize', 6)
+set(gca, 'FontName', 'Arial')
+text(35, 0.024,'baseline', 'color', 'k', 'fontsize', 6, 'fontname', 'Arial')
+text(35, 0.02,'NaCl', 'color', 'r', 'fontsize', 6, 'fontname', 'Arial')
+xlabel('frequency (Hz)', 'fontsize', 6, 'fontname', 'Arial')
+ylabel('power (a.u.)', 'fontsize', 6, 'fontname', 'Arial')
 
 % offset axis
 offset_axis(0.05, axPars);
@@ -246,10 +251,11 @@ ylim(yy)
 set(gca, 'XTick', [3 48])
 set(gca, 'YTick', yy)
 set(gca, 'XScale', 'log')
-text(35, 0.024,'baseline', 'color', 'k', 'fontsize', 6)
-text(35, 0.02,'5HT', 'color', 'r', 'fontsize', 6)
-xlabel('frequency (Hz)', 'fontsize', 6)
-ylabel('power (a.u.)', 'fontsize', 6)
+set(gca, 'FontName', 'Arial')
+text(35, 0.024,'baseline', 'color', 'k', 'fontsize', 6, 'fontname', 'Arial')
+text(35, 0.02,'5HT', 'color', 'r', 'fontsize', 6, 'fontname', 'Arial')
+xlabel('frequency (Hz)', 'fontsize', 6, 'fontname', 'Arial')
+ylabel('power (a.u.)', 'fontsize', 6, 'fontname', 'Arial')
 
 % offset axis
 offset_axis(0.05, axPars)
@@ -281,10 +287,11 @@ ylim(yy)
 set(gca, 'XScale', 'log')
 set(gca, 'XTick', [3 48])
 set(gca, 'YTick', yy)
-text(35, 0.024,'high FR', 'color', 'k', 'fontsize', 6)
-text(35, 0.02,'low FR', 'color', 'r', 'fontsize', 6)
-xlabel('frequency (Hz)', 'fontsize', 6)
-ylabel('power (a.u.)', 'fontsize', 6)
+set(gca, 'FontName', "Arial")
+text(35, 0.024,'high FR', 'color', 'k', 'fontsize', 6, 'fontname', 'Arial')
+text(35, 0.02,'low FR', 'color', 'r', 'fontsize', 6, 'fontname', 'Arial')
+xlabel('frequency (Hz)', 'fontsize', 6, 'fontname', 'Arial')
+ylabel('power (a.u.)', 'fontsize', 6, 'fontname', 'Arial')
 
 % offset axis
 offset_axis(0.05, axPars)
@@ -338,13 +345,14 @@ for f = 1:2
         ylim(range)
         set(gca, 'XTick', range, 'XTickLabel', ranges{f}(d, :))
         set(gca, 'YTick', range, 'YTickLabel', ranges{f}(d, :))
-        xlabel('baseline', 'fontsize', 6)
-        ylabel('drug', 'fontsize', 6)
+        set(gca, 'FontName', "Arial")
+        xlabel('baseline', 'fontsize', 6, 'fontname', 'Arial')
+        ylabel('drug', 'fontsize', 6, 'fontname', 'Arial')
         text(range(1)+0.01*(range(2)-range(1)), range(2) - 0.05*(range(2)-range(1)), ...
-            pvals{f, d}, 'color', 'k', 'fontsize', 6)
+            pvals{f, d}, 'color', 'k', 'fontsize', 6, 'fontname', 'Arial')
         
         if d==1 
-            title({tnames{f}, 'power (a.u.)'}, 'fontsize', 6, 'Color', tcolors{f})
+            title({tnames{f}, 'power (a.u.)'}, 'fontsize', 6, 'Color', tcolors{f}, 'fontname', 'Arial')
         end
 
         % offset axis
@@ -390,10 +398,11 @@ for f = 1:2
     ylim(range)
     set(gca, 'XTick', range, 'XTickLabel', ranges{f})
     set(gca, 'YTick', range, 'YTickLabel', ranges{f})
-    xlabel('baseline', 'fontsize', 6)
-    ylabel('drug', 'fontsize', 6)
+    set(gca, 'FontName', 'Arial')
+    xlabel('baseline', 'fontsize', 6, 'fontname', 'Arial')
+    ylabel('drug', 'fontsize', 6, 'fontname', 'Arial')
     text(range(1)+0.01*(range(2)-range(1)), range(2) - 0.05*(range(2)-range(1)), ...
-        pvals{f}, 'color', 'k', 'fontsize', 6)
+        pvals{f}, 'color', 'k', 'fontsize', 6, 'fontname', 'Arial')
 
     % offset axis
     offset_axis(0.05, axPars)
@@ -409,4 +418,4 @@ set(gcf, 'PaperSize', [10 10]);
 set(gcf, 'PaperPositionMode', 'manual');
 set(gcf, 'PaperPosition', [0 0 10 10]);
 
-print(gcf,'-dpdf', [figpath '/Figure_2.pdf'], sprintf('-r%d',300))
+print(gcf,'-dpdf', [figpath '/Figure_2.pdf'])

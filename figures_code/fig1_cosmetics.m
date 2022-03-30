@@ -123,6 +123,16 @@ text(range(1)+0.01*(range(2)-range(1)), range(2) - 0.15*(range(2)-range(1)), ...
     ['n = ' num2str(size(data{1}{1}, 2) + size(data{2}{1}, 2))], 'color', cols(1, :), 'fontsize', 6)
 title({'mean firing rate', '(spk/s)'}, 'fontsize', 6)
 
+current_ax = gca; % Obtain figure handle
+
+% Change all text font to meet specifications
+current_ax.Children(1).FontName = "Arial";
+current_ax.Children(2).FontName = "Arial";
+current_ax.Title.FontName = "Arial";
+current_ax.FontName = "Arial";
+current_ax.XLabel.FontName = "Arial";
+current_ax.YLabel.FontName = "Arial";
+
 % offset axis
 offset_axis(0.05, axPars)
 
@@ -152,10 +162,13 @@ side_ax.Position = [xbegin+figspace_x+sq+0.2 ybegin+figspace_y sq/3 sq];
 
 % Manually fix the visual parameters for readability
 center_ax.FontSize = 6;
+center_ax.FontName = "Arial";
 center_ax.LineWidth = 0.5;
 top_ax.FontSize = 6;
+top_ax.FontName = "Arial";
 top_ax.LineWidth = 0.5;
 side_ax.FontSize = 6;
+side_ax.FontName = "Arial";
 side_ax.LineWidth = 0.5;
 
 
@@ -168,10 +181,14 @@ center_ax.YTick = [-0.25, 0, 0.25];
 % Move the group number labels down on the plot after fixing font size
 center_ax.Children(1).FontSize = 6;
 center_ax.Children(4).FontSize = 6;
+center_ax.Children(1).FontName = "Arial";
+center_ax.Children(4).FontName = "Arial";
 center_ax.Children(1).Position(2) = 0.23;
 center_ax.Children(4).Position(2) = 0.18;
 center_ax.XLabel.FontSize = 6;
 center_ax.YLabel.FontSize = 6;
+center_ax.XLabel.FontName = "Arial";
+center_ax.YLabel.FontName = "Arial";
 center_ax.XColor = [0 0 0];
 center_ax.YColor = [0 0 0];
 center_ax.YLabel.Color = [0 0 0];
@@ -214,9 +231,10 @@ side_ax.YTick = [8];
 
 % Change the median labels to make uniform with other figures
 for i = [1,3]
-    side_ax.Children(i).FontSize = 5;
+    side_ax.Children(i).FontSize = 6;
+    side_ax.Children(i).FontName = "Arial";
     side_ax.Children(i).FontWeight = 'normal';
-    side_ax.Children(i).Position(1) = side_ax.Children(i).Position(1) + 0.0175*(i-2);
+    side_ax.Children(i).Position(1) = side_ax.Children(i).Position(1) + 0.018*(i-2);
     side_ax.Children(i).Position(2) = 8;
 end
 
@@ -226,7 +244,7 @@ side_ax.Children(1).String = '0.00';
 % Reduce the size and position of markers for medians to fit better
 for i = [2,4]
     side_ax.Children(i).MarkerSize = 1;
-    side_ax.Children(i).YData = side_ax.Children(i-1).Position(2) - 1.0;
+    side_ax.Children(i).YData = side_ax.Children(i-1).Position(2) - 1.5;
 end
 
 
@@ -234,10 +252,11 @@ end
 
 % Change the median labels to make uniform with other figures
 for i = [1,3]  
-    top_ax.Children(i).FontSize = 5;
+    top_ax.Children(i).FontSize = 6;
+    top_ax.Children(i).FontName = "Arial";
     top_ax.Children(i).FontWeight = 'normal';
-    top_ax.Children(i).Position(1) = top_ax.Children(i).Position(1) + 0.12*(2-i);
-    top_ax.Children(i).Position(2) = top_ax.Children(i).Position(2) + 0.2;
+    top_ax.Children(i).Position(1) = top_ax.Children(i).Position(1) + 0.15*(2-i);
+    top_ax.Children(i).Position(2) = top_ax.Children(i).Position(2) - 0.1;
 end
 
 % Reduce the marker size for medians to make uniform with other figures
@@ -342,4 +361,4 @@ set(gcf, 'PaperSize', [10 10]);
 set(gcf, 'PaperPositionMode', 'manual');
 set(gcf, 'PaperPosition', [0 0 10 10]);
 
-print(gcf,'-dpdf', [figpath '/Figure_1.pdf'], sprintf('-r%d',300))
+print(gcf,'-dpdf', [figpath '/Figure_1.pdf'])

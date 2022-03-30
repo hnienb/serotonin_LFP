@@ -46,7 +46,7 @@ animals = {'monkey K', 'monkey M'};
 ax_new = axes(axPars, 'position', [xbegin ybegin gr*sq sq]);
 
 % open figures
-fig = openfig([figpath '/subplots/ka173_example200_drug.fig'],'invisible');
+fig = openfig([figpath '/subplots/ka173_example200_base.fig'],'invisible');
 
 % generate axis object
 axesObjs = get(fig, 'Children'); 
@@ -59,6 +59,10 @@ copyobj(ax_old.Children, ax_new); delete(fig);
 ax_new.Children(3).Position = [-64 0 0];
 ax_new.Children(2).Position = [-125 -2 0];
 ax_new.Children(1).Position = [-135 -3 0];
+
+ax_new.Children(1).FontName = "Arial";
+ax_new.Children(2).FontName = "Arial";
+ax_new.Children(3).FontName = "Arial";
 
 % offset axis
 offset_axis(0.05, axPars)
@@ -68,7 +72,7 @@ offset_axis(0.05, axPars)
 ax_new = axes(axPars, 'position', [xbegin+2*figspace_x ybegin gr*sq sq]);
 
 % open figures
-fig = openfig([figpath '/subplots/ka173_example200_base.fig'], 'invisible');
+fig = openfig([figpath '/subplots/ka173_example200_drug.fig'], 'invisible');
 
 % generate axis object
 axesObjs = get(fig, 'Children'); 
@@ -81,6 +85,10 @@ copyobj(ax_old.Children, ax_new); delete(fig);
 ax_new.Children(3).Position = [-64 0 0];
 ax_new.Children(2).Position = [-125 -2 0];
 ax_new.Children(1).Position = [-135 -3 0];
+
+ax_new.Children(1).FontName = "Arial";
+ax_new.Children(2).FontName = "Arial";
+ax_new.Children(3).FontName = "Arial";
 
 % offset axis
 offset_axis(0.05, axPars)
@@ -134,20 +142,20 @@ for c = 1:6
     set(gca, 'YTick', ranges{i}, 'YTickLabel', ranges{i})
 
     if c < 4
-        xlabel(xlabs{c}, 'fontsize', 6)
-        ylabel(ylabs{c}, 'fontsize', 6)
+        xlabel(xlabs{c}, 'fontsize', 6, "fontName", "Arial")
+        ylabel(ylabs{c}, 'fontsize', 6, "fontName", "Arial")
     else
-        xlabel(xlabs{c-3}, 'fontsize', 6)
-        ylabel(ylabs{c-3}, 'fontsize', 6)
+        xlabel(xlabs{c-3}, 'fontsize', 6, "fontName", "Arial")
+        ylabel(ylabs{c-3}, 'fontsize', 6, "fontName", "Arial")
     end
     text(ranges{i}(1)+0.01*(ranges{i}(2)-ranges{i}(1)), ranges{i}(2) - 0.05*(ranges{i}(2)-ranges{i}(1)), ...
-        allstats, 'color', 'k', 'fontsize', 6)
+        allstats, 'color', 'k', 'fontsize', 6, "fontName", "Arial")
     
     % correlation
     if c==2
-        title('Pearson correlation coefficient', 'fontsize', 6)
+        title('Pearson correlation coefficient', 'fontsize', 6, 'fontName', "Arial")
     elseif c==5
-        title('Information gain (bits per bin)', 'fontsize', 6)
+        title('Information gain (bits per bin)', 'fontsize', 6, 'fontName', "Arial")
     end
 
     % offset axis
@@ -194,4 +202,4 @@ set(gcf, 'PaperSize', [10 10]);
 set(gcf, 'PaperPositionMode', 'manual');
 set(gcf, 'PaperPosition', [0 0 10 10]);
 
-print(gcf,'-dpdf', [figpath '/Figure_4.pdf'], sprintf('-r%d',300))
+print(gcf,'-dpdf', [figpath '/Figure_4.pdf'])
