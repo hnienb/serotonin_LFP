@@ -1,12 +1,12 @@
 # serotonin_LFP
-Custom analysis code for [authorship]. Serotonergic modulation of local network processing in V1 shares signatures with the modulation by spatial attention, [year]
+Custom analysis code for [paper reference]. Serotonergic modulation of local network processing in V1 shares signatures with the modulation by spatial attention, [year]
 
 # Contents
 ## Data
 Source data needed to recreate paper figures
 
 MP-processed LFP data is not included due file-size constraints, but it can be
-replicated using the available code (see below). 
+replicated using the available code (see below).
 
 #### Format
 The spiking information and LFP information are stored in separate files with the following naming convention:
@@ -39,7 +39,7 @@ Each .mat file includes a struct *ex* with the following information:
 
 *ex.Trials* contains the following information:
 - **st**: Boolean value if stimulus was presented during trial
-- **me**: Placeholder value for blank stimulus, if necessary
+- **me**: Monocular eye condition (always set to 0 since only binocular data used)
 - **or**: Orientation used for grating stimulus for the trial
 - **co**: Contrast used for grating stimulus for the trial
 - **TrialEnd**: End time of trial (in sec)
