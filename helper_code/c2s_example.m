@@ -32,7 +32,7 @@ pred_drug = pred_drug.data;
 prep = {prep_base{1}, prep_drug{1}};
 pred = {pred_base{1}, pred_drug{1}};
 
-cols = {[cb(end, :); cb(1,:)], [cb(end-2, :); cb(3,:)]};
+cols = {[cb(end-2, :); cb(3,:)], [cb(end, :); cb(1,:)]};
 movebin = 200;
 x = 1:movebin;
 
