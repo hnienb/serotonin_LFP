@@ -65,8 +65,6 @@ function [result, Expt] = HN_PlotRevCorAny_tue(Expt, varargin)
 % history
 % 2/14/16   hn: changed code to correct for timing bug with RCperiod in
 %           VisStim versions preceding 1.0.20
-% 3/16/22   ap: changed code to remove unnecessary bloat due to updated
-%           data 
 
 times = -200:10:1600;
 np = 1;
@@ -97,6 +95,7 @@ iskip = 0; % bruce had this set to 1
 aloop = 1;
 collapse = [0 0];
 setyvals = [];
+type = [];
 btype = [];
 extraidx = {};
 minplottime = 0;
@@ -107,6 +106,8 @@ duration =[]; %0.1ms
 all_fr=[];
 all_spk=[];
 fl_fr = [];
+% figh1 = figure;
+% figh2 = figure;
 type = 'or_seq';
 if profile
     tic;
@@ -163,7 +164,7 @@ while j < nargin
       j = j+1;
     elseif strncmpi(varargin{j},'nmin',4)
       nmin = varargin{j+1};
-      if ischar(nmin) && strmatch(nmin,'auto')
+      if ischar(nmin) & strmatch(nmin,'auto')
           autonmin = 1;
       end
       j = j+1;
@@ -179,7 +180,7 @@ while j < nargin
         noextras = 1;
     elseif strncmpi(varargin{j},'pcolor',5)
         showpcolor = 2;
-        if length(varargin) > j && isnumeric(varargin{j+1})
+        if length(varargin) > j & isnumeric(varargin{j+1})
             showpcolor = varargin{j+1};
             j = j+1;
         end
@@ -193,7 +194,7 @@ while j < nargin
         getpsych = 3;
     elseif strncmpi(varargin{j},'interp',5)
         interp = 1;
-        if length(varargin) > j && isnumeric(varargin{j+1})
+        if length(varargin) > j & isnumeric(varargin{j+1})
             interp = varargin{j+1};
             j = j+1;
         end
@@ -260,201 +261,256 @@ Expt.Trials = Expt.Trials(itr);
 
 Expt = AdjustSpikeTimes(Expt);
 
+if isfield(Expt.stim.vals,'RCperiod') && Expt.stim.vals.RCperiod>1
+    Expt = Adjust4RCperiod(Expt);
+end
+
+%btype = 'phase_seq';
+
 
 result.calctime(1) = now;
-   
-lens =[];
-for j = 1:length(Expt.Trials)
-    lens(j) = length(Expt.Trials(j).Start);
-    id = find(Expt.Trials(j).Start < 0);
-    if ~isempty(id)
-        Expt.Trials(j).Start(id) = NaN;
+% colors =  mycolors;
+% excolors = mycolors;
+% excolors{4} = [0.6 0.4 0]; %% dotted yellow invisible
+% colors = {colors{:} colors{:}}; % just in case second order makes many lines
+if ~isfield(Expt.Header,'RCparams')
+    if isfield(Expt.Header,'StoreErr')
+        for j = 1:length(Expt.Trials)
+            lens(j) = length(Expt.Trials(j).Start);
+        end
+        nf = max(lens);
+        for j = 1:length(Expt.Trials)
+            if(length(Expt.Trials(j).Start) < nf)
+                Expt.Trials(j).Start(end:nf) = NaN;
+            end
+        end
+        fprintf('NaN Paddding for Store Bug\n');
+    else
+        lens =[];
+        for j = 1:length(Expt.Trials)
+            lens(j) = length(Expt.Trials(j).Start);
+            id = find(Expt.Trials(j).Start < 0);
+            if ~isempty(id)
+                Expt.Trials(j).Start(id) = NaN;
+            end
+        end
+        if isempty(lens)
+            disp ('no trials')
+            return
+        else
+        nf = min(lens);
+        end
+        nf = floor(prctile(lens,10));
+        Expt.Trials = Expt.Trials(find(lens >= nf));
+        result.excluded_trials = find(lens<nf);
+        for j = 1:length(Expt.Trials)
+            Expt.Trials(j).Start = Expt.Trials(j).Start(1:nf);
+        end
     end
-end
-if isempty(lens)
-    disp ('no trials')
-    return
-end
-nf = floor(prctile(lens,10));
-Expt.Trials = Expt.Trials(find(lens >= nf));
-result.excluded_trials = find(lens<nf);
-for j = 1:length(Expt.Trials)
-    Expt.Trials(j).Start = Expt.Trials(j).Start(1:nf);
-end
 
+    starts = [Expt.Trials.Start];
+    if isfield(Expt.Header,'Name')
+            Expt.Header.Name = strrep(Expt.Header.Name,'\','/');
+    elseif isfield(Expt.Header,'fileName')
+            Expt.Header.Name = strrep(Expt.Header.fileName,'\','/');
+    else Expt.Header.Name = '';
+    end
 
 if isempty(type)
-if ischar(Expt.Stimvals.et)
-    type = Expt.Stimvals.et;
-else
-    if Expt.Stimvals.et == 263
-        type = 'dO';
-    elseif Expt.Stimvals.et == 237
-        type = 'dO';
+    if ischar(Expt.Stimvals.et)
+        type = Expt.Stimvals.et;
+    else
+        if Expt.Stimvals.et == 263
+            type = 'dO';
+        elseif Expt.Stimvals.et == 237
+            type = 'dO';
+        end
     end
-end
 end
 if isempty(btype)
-if isfield(Expt,'Stimvals') 
-    if ischar(Expt.Stimvals.e2)
-        btype = Expt.Stimvals.e2;
-    else
-        if Expt.Stimvals.e2 == 112
-            btype = 'ce';
-        elseif Expt.Stimvals.e2 == 117
-            btype = 'ce';
+    if isfield(Expt,'Stimvals') 
+        if ischar(Expt.Stimvals.e2)
+            btype = Expt.Stimvals.e2;
+        else
+            if Expt.Stimvals.e2 == 112
+                btype = 'ce';
+            elseif Expt.Stimvals.e2 == 117
+                btype = 'ce';
+            end
         end
     end
 end
-end
-if strcmp(btype,'Pd') && strcmp(type,'Dc')
-    type = 'Pd';
-    btype = 'Dc';
-end
-if strcmp(btype,'or') && strcmp(type,'Dc')
-    type = 'or';
-    btype = 'Dc';
-end
-
-if strcmp(btype,'dx') && strcmp(type,'Dc')
-    type = 'dx';
-    btype = 'Dc';
-end
-
-if strcmp(btype,'e0') || collapse(2)
-    if ~strcmp(Expt.Stimvals.e3,'e0')
-        btype = Expt.Stimvals.e3;
-    else
-        btype = [];
+    if strcmp(btype,'Pd') & strcmp(type,'Dc')
+        type = 'Pd';
+        btype = 'Dc';
     end
-end
-if strcmp(btype,'ph')
-btype = [];
-end
+    if strcmp(btype,'or') & strcmp(type,'Dc')
+        type = 'or';
+        btype = 'Dc';
+    end
 
-if strcmp(btype,'ce')
-    linestyles = {'--', '-', ':','-',':',};
-    label_this_yval = 2;
-elseif getpsych == 1
-    linestyles = {'--', '-', ':','-.','-'};
-    label_this_yval = 2;
-else
-    linestyles = {'-', '--', ':','-.','-'};
-end
-
-
-%
-% first make sure all trials have the same length vectors
-% describing the stimulus
-
-res.spksum = 0;
-for j = 1:length(Expt.Trials)
-    if isempty(type)
+    if strcmp(btype,'dx') & strcmp(type,'Dc')
         type = 'dx';
-        disp('type set to dx')
+        btype = 'Dc';
     end
-    Expt.Trials(j).eval = Expt.Trials(j).(type)(end);
-    len(j) = eval(['length(Expt.Trials(j).' type ');']);
-    res.spksum = res.spksum + length(Expt.Trials(j).Spikes);
+
+    if strcmp(btype,'e0') | collapse(2)
+        if ~strcmp(Expt.Stimvals.e3,'e0')
+            btype = Expt.Stimvals.e3;
+        else
+            btype = [];
+        end
+    end
+if strcmp(btype,'ph')
+    btype = [];
 end
 
-if res.spksum == 0
-    fprintf('No Spikes in %s\n',Expt.Header.Name);
-    return;
-end
+    if strcmp(btype,'ce')
+        linestyles = {'--', '-', ':','-',':',};
+        label_this_yval = 2;
+    elseif getpsych == 1
+        linestyles = {'--', '-', ':','-.','-'};
+        label_this_yval = 2;
+    else
+        linestyles = {'-', '--', ':','-.','-'};
+    end
 
 
-tlen = floor(mean(len)+0.1);
-if nf < tlen && tlen -nf < tlen/10
-    tlen = nf;
-end
+    %
+    % first make sure all trials have the same length vectors
+    % describing the stimulus
+
+    res.spksum = 0;
+    for j = 1:length(Expt.Trials)
+        if isempty(type)
+            type = 'dx';
+            disp('type set to dx')
+        end
+        Expt.Trials(j).eval = Expt.Trials(j).(type)(end);
+        len(j) = eval(['length(Expt.Trials(j).' type ');']);
+        res.spksum = res.spksum + length(Expt.Trials(j).Spikes);
+    end
+
+    if res.spksum == 0
+        fprintf('No Spikes in %s\n',Expt.Header.Name);
+        return;
+    end
+
+    if isfield(Expt.Header,'StoreErr')
+        tlen = max(len);
+        Nf = tlen;
+    else
+        tlen = floor(mean(len)+0.1);
+        if nf < tlen & tlen -nf < tlen/10;
+            tlen = nf;
+        end
 %what is stored in Trials.Nf is the number of frames completed _before_
 %the last frame (becuase it is send then). So Add one.
-if isfield(Expt.Trials,'Nf')
-    Nf = 1+round(mean([Expt.Trials.Nf]));
-elseif isfield(Expt,'Stimvals')
-    Nf = Expt.Stimvals.Nf;
-else 
-    for n = 1:length(Expt.Trials)
-        nfs(n) = length([Expt.Trials(n).Start]);
+        if isfield(Expt.Trials,'Nf')
+            Nf = 1+round(mean([Expt.Trials.Nf]));
+        elseif isfield(Expt,'Stimvals')
+            Nf = Expt.Stimvals.Nf;
+        else 
+            for n = 1:length(Expt.Trials);
+                nfs(n) = length([Expt.Trials(n).Start]);
+            end
+            Nf = round(mean(nfs));
+        end
+        if Nf < tlen & Nf > 0
+            tlen = Nf;
+        end
     end
-    Nf = round(mean(nfs));
-end
-if Nf < tlen && Nf > 0
-    tlen = Nf;
-end
 
-if profile
-    fprintf('Filling trials at %.2f\n',toc);
-end
-
-frameperiod = 1/Expt.refreshRate*10000;
-
-if ~isfield(Expt,'Stimvals')
-    for n = 1:length(Expt.Trials)  
-        % now new: make sure we have column vectors
-        if eval(['size([Expt.Trials(n).' type '],2)'])>1
-        eval(['Expt.Trials(n).' type ...
-            '= [Expt.Trials(n).' ...
-            type '(1:length(Expt.Trials(n).Start))];']);
+    if profile
+        fprintf('Filling trials at %.2f\n',toc);
+    end
+    if isfield(Expt,'Stimvals')
+        if isfield(Expt.Stimvals,'fz') & ~isempty(Expt.Stimvals.fz)
+            frameperiod = 10000/Expt.Stimvals.fz;
         else
-        eval(['Expt.Trials(n).' type ...
-            '= transpose([Expt.Trials(n).' ...
-            type '(1:length(Expt.Trials(n).Start))]);']);
+            frameperiod = 104;
         end
-        Expt.Trials(n).Trial = n;
+    else frameperiod = 1/Expt.setup.refreshRate*10000;
     end
-end
+    if ~isfield(Expt,'Stimvals')
+%         fprintf('2')
+        for n = 1:length(Expt.Trials)  
+            % why do we need this?--- old code
+ %           if length(eval(['Expt.Trials(n).' type ]))>length(Expt.Trials(n).Start);
+%                 eval(['Expt.Trials(n).' type ...
+%                     '(1:length(Expt.Trials(n).Start),1)= [Expt.Trials(n).' ...
+%                     type '(1:length(Expt.Trials(n).Start))];']);
+%------------------------------------------------------------------
+                % now new: make sure we have column vectors
+                if eval(['size([Expt.Trials(n).' type '],2)'])>1
+                eval(['Expt.Trials(n).' type ...
+                    '= [Expt.Trials(n).' ...
+                    type '(1:length(Expt.Trials(n).Start))];']);
+                else
+                eval(['Expt.Trials(n).' type ...
+                    '= transpose([Expt.Trials(n).' ...
+                    type '(1:length(Expt.Trials(n).Start))]);']);
+                end
+%            end
+            Expt.Trials(n).Trial = n;
+            %Expt.Trials(n).Start = (Expt.Trials(n).Start'-Expt.Trials(n).TrialStart)*10000;
+        end
+    end
 
-for j = 1:length(Expt.Trials)
-    if ~isempty(btype) & length(Expt.Trials(j).(btype)) == 1
-        Expt.Trials(j).(btype)(1:tlen,1) = Expt.Trials(j).(btype);
+    for j = 1:length(Expt.Trials)
+        if ~isempty(btype) & length(Expt.Trials(j).(btype)) == 1
+            Expt.Trials(j).(btype)(1:tlen,1) = Expt.Trials(j).(btype);
+        end
+        if len(j) < tlen
+            Expt.Trials(j).(type)((len(j)+1):tlen) = NaN;
+            if isfield(Expt.Trials,'ce')
+                Expt.Trials(j).ce((len(j)+1):tlen) = NaN;
+            end
+            if ~isempty(btype)
+                Expt.Trials(j).(btype)((len(j)+1):tlen) = NaN;
+            end
+            if isfield(Expt.Trials,'st_seq')
+                Expt.Trials(j).st_seq((len(j)+1):tlen) = NaN;;
+            end
+            if isfield(Expt.Trials,'me')
+                Expt.Trials(j).me((len(j)+1):tlen) = NaN;
+            end
+        elseif len(j) > tlen
+            Expt.Trials(j).(type) = Expt.Trials(j).(type)(1:tlen);
+            if ~isempty(btype)
+                Expt.Trials(j).(btype) = Expt.Trials(j).(btype)(1:tlen);
+            end
+            if isfield(Expt.Trials,'ce') & length(Expt.Trials(j).ce) > 1
+                Expt.Trials(j).ce  = Expt.Trials(j).ce(1:tlen);
+            end
+            if isfield(Expt.Trials,'st_seq') && length(Expt.Trials(1).st_seq)>1
+                Expt.Trials(j).st_seq = Expt.Trials(j).st_seq(1:tlen);
+            end
+            if isfield(Expt.Trials,'me') & length(Expt.Trials(j).me)>=tlen
+                Expt.Trials(j).me = Expt.Trials(j).me(1:tlen);
+            elseif isfield(Expt.Trials,'me') & length(Expt.Trials(j).me) ==1
+                Expt.Trials(j).me = ones(tlen,1)*Expt.Trials(j).me;
+            end
+        end
+        id = find(isnan(Expt.Trials(j).Start));
+        id = id(find(id <= tlen));
+        for k = 1:length(id)
+            Expt.Trials(j).(type)(id(k)) = Expt.Trials(j).(type)(id(k)-1);
+        end
+        id = find((Expt.Trials(j).(type)) > 1000);
+        Expt.Trials(j).(type)(id) = -10000;
+        tstart = Expt.Trials(j).Start(1) - Expt.Trials(j).TrialStart;
+        tend = Expt.Trials(j).Start(tlen) - Expt.Trials(j).TrialStart;
+        Expt.Trials(j).Count = sum(Expt.Trials(j).Spikes > tstart & Expt.Trials(j).Spikes < tend);
+        Expt.Trials(j).TrialDur = tend-tstart;
     end
-    if len(j) < tlen
-        Expt.Trials(j).(type)((len(j)+1):tlen) = NaN;
-        if isfield(Expt.Trials,'ce')
-            Expt.Trials(j).ce((len(j)+1):tlen) = NaN;
-        end
-        if ~isempty(btype)
-            Expt.Trials(j).(btype)((len(j)+1):tlen) = NaN;
-        end
-        if isfield(Expt.Trials,'st_seq')
-            Expt.Trials(j).st_seq((len(j)+1):tlen) = NaN;
-        end
-        if isfield(Expt.Trials,'me')
-            Expt.Trials(j).me((len(j)+1):tlen) = NaN;
-        end
-    elseif len(j) > tlen
-        Expt.Trials(j).(type) = Expt.Trials(j).(type)(1:tlen);
-        if ~isempty(btype)
-            Expt.Trials(j).(btype) = Expt.Trials(j).(btype)(1:tlen);
-        end
-        if isfield(Expt.Trials,'ce') && length(Expt.Trials(j).ce) > 1
-            Expt.Trials(j).ce  = Expt.Trials(j).ce(1:tlen);
-        end
-        if isfield(Expt.Trials,'st_seq') && length(Expt.Trials(1).st_seq)>1
-            Expt.Trials(j).st_seq = Expt.Trials(j).st_seq(1:tlen);
-        end
-        if isfield(Expt.Trials,'me') && length(Expt.Trials(j).me)>=tlen
-            Expt.Trials(j).me = Expt.Trials(j).me(1:tlen);
-        elseif isfield(Expt.Trials,'me') && length(Expt.Trials(j).me) ==1
-            Expt.Trials(j).me = ones(tlen,1)*Expt.Trials(j).me;
-        end
-    end
-    id = find(isnan(Expt.Trials(j).Start));
-    id = id(find(id <= tlen));
-    for k = 1:length(id)
-        Expt.Trials(j).(type)(id(k)) = Expt.Trials(j).(type)(id(k)-1);
-    end
-    id = find((Expt.Trials(j).(type)) > 1000);
-    Expt.Trials(j).(type)(id) = -10000;
-    tstart = Expt.Trials(j).Start(1) - Expt.Trials(j).TrialStart;
-    tend = Expt.Trials(j).Start(tlen) - Expt.Trials(j).TrialStart;
-    Expt.Trials(j).Count = sum(Expt.Trials(j).Spikes > tstart & Expt.Trials(j).Spikes < tend);
-    Expt.Trials(j).TrialDur = tend-tstart;
+    rcparams.btype = btype;
+    rcparams.type = type;
+else
+    btype = Expt.RCparams.btype;
+    type = Expt.RCparams.type;
+    starts = [Expt.Trials.Start];
 end
-rcparams.btype = btype;
-rcparams.type = type;
 
 
 if(autoslice)
@@ -1409,8 +1465,8 @@ function Expt = Adjust4RCperiod(Expt);
 % check version of VisStim (pre 1.0.20 we had a bug that shifted all
 % stimuli by RCperiod-1 frames
 newversion = 0;
-if isfield(Expt,'VisStimVersion')
-    VSversion = Expt.VisStimVersion;
+if isfield(Expt,'Header') && isfield(Expt.Header,'VisStimVersion')
+    VSversion = Expt.Header.VisStimVersion;
     % parse VS version
     dots = findstr(VSversion,'.');
     if length(dots) ==3
@@ -1425,7 +1481,7 @@ if isfield(Expt,'VisStimVersion')
 end
 if newversion
     for n=1:length(Expt.Trials)
-        idx = [1:1:length(Expt.Trials(n).Start)];
+        idx = [1:Expt.stim.vals.RCperiod:length(Expt.Trials(n).Start)];
         Expt.Trials(n).Start = Expt.Trials(n).Start(idx);
         Fields = {'phase_seq','st_seq','me_seq','sf_seq','or_seq','co_seq'};
         for n2 = 1:length(Fields)
@@ -1444,7 +1500,7 @@ else
     for n=1:length(Expt.Trials)
         % removing the time-stamp of the first frame
         Expt.Trials(n).Start = Expt.Trials(n).Start(2:end);
-        idx = [1:1:length(Expt.Trials(n).Start)];
+        idx = [1:Expt.stim.vals.RCperiod:length(Expt.Trials(n).Start)];
         Expt.Trials(n).Start = Expt.Trials(n).Start(idx);
         Fields = {'phase_seq','st_seq','me_seq','sf_seq','or_seq','co_seq'};
         for n2 = 1:length(Fields)

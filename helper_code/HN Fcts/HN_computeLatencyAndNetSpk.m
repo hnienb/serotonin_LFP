@@ -157,7 +157,13 @@ for n = 1: length(res.sdfs.extras)
 end
 % mean response in spikes/sec
 mn_resp = sum(mn_resp)/sum(N);
-mn_resp = mn_resp/ex.refreshRate;
+mn_resp = mn_resp/ex.setup.refreshRate;
+
+
+% added by CL on Feb, 17th
+if isfield(ex.stim.vals,'RCperiod') && ex.stim.vals.RCperiod>1
+    mn_resp = mn_resp / ex.stim.vals.RCperiod;
+end
 
 % net spikes per frame
 nspk = y1+mn_resp;
