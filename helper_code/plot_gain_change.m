@@ -29,54 +29,25 @@ if ~exist(save_path, 'dir'); mkdir(save_path); end
 
 %% Load the ex data from the raw data files
 if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'Loading'))==1
+
+    Lfps_ = load([strjoin(parts(1:end-2), '/'), '/resources/Data/Lfps_pair/Lfps_rc.mat']);
+    Lfps = Lfps_.Lfps;
     
-    % Windows pathway containing the experiment data files
-    filenames = {dir(load_path).name};
-    filenames(1:2) = []; % Remove the relative paths
-
     % Search for only files that contain RC data and load those
-    parfor file_index = 1:length(filenames)
-        % Check to make sure the file isn't a drug condition
-        file = filenames(file_index);
-        if ~contains(file{:}, '5HT') && ~contains(file{:}, 'NaCl')
-            % Create the absolute filepath for baseline file
-            file_base = char(strcat(load_path, filenames(file_index)));
-            try
-                % Load the baseline file with abs pathway
-                ex_base = loadCluster(file_base);
+    parfor file_index = 1:length(Lfps.lfplist)
+       
+        ex_base_ = load([load_path, Lfps.lfplist{file_index}{1}]);
+        ex_base = ex_base_.ex;
 
-                % Find the corresponding drug condition file
-                name_split = strsplit(file{:}, '_');
-                session_name = strjoin(name_split(1:3), "_");
+        ex_drug_ = load([load_path, Lfps.lfplist{file_index}{2}]);
+        ex_drug = ex_drug_.ex;
 
-                % Iterate through the list to find the drug condition
-                for drug_index = 1:length(filenames)
-                    drug_name = filenames(drug_index);
-                    % Make sure it's not the original baseline file
-                    if contains(drug_name{:}, session_name) && ~isequal(drug_name, file)
-                        % Absolute pathway for the drug condition file
-                        file_drug = strcat(load_path, drug_name{:});
-                        % Load using the abs path
-                        ex_drug = loadCluster(file_drug);
-
-                        % Add base and drug ex info to the results structure
-                        ex_results{file_index}.ex_base = ex_base;
-                        ex_results{file_index}.file_base = file_base;
-                        ex_results{file_index}.ex_drug = ex_drug;
-                        ex_results{file_index}.file_drug = file_drug;
-
-                        break; % Terminate early
-                    end
-                end
-
-            catch % Failed to open the data file, report it out
-                fprintf("Unable to open file: %s\n\n", file_base)
-            end   
-        end
+        % Add base and drug ex info to the results structure
+        ex_results{file_index}.ex_base = ex_base;
+        ex_results{file_index}.file_base = Lfps.lfplist{file_index}{1};
+        ex_results{file_index}.ex_drug = ex_drug;
+        ex_results{file_index}.file_drug = Lfps.lfplist{file_index}{2};
     end
-
-    % Remove the empty rows
-    ex_results = ex_results(~cellfun('isempty', ex_results))';
 
     % Save the resulting structure
     save([save_path, '/ex_results.mat'], 'ex_results', '-v7.3');
@@ -143,9 +114,11 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'Fitting'))==1
 
         % Determine if the unit achieves criterion R^2 (explained variance)
         f = fit_results{subspace_index}.b0 + fit_results{subspace_index}.b1 * x;
-        R2 = (var(y) - var(y - f)) / var(y);
+        % Find coefficient of correlation and square it to get R^2
+        r = corrcoef([y,f]);
+        R2 = r(2,1).^2;
 
-        if R2 >= 0.70
+        if R2 >= 0.68
             fit_results{subspace_index}.goodR2 = 1;
         else
             fit_results{subspace_index}.goodR2 = 0;
@@ -198,7 +171,6 @@ if sum(contains(analysis, 'all'))==1 || sum(contains(analysis, 'Plotting'))==1
     % Marker shapes for the monkey (circle for Mango, square for Kaki)
     s = ['o', 's'];
 
-    % Tiled Layout (matlab 2019b required) to add histograms to scatterplot
     figure;
 
     % Histogram for relative gain change (x-axis)
