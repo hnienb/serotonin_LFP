@@ -132,7 +132,7 @@ set(gca, 'XTick', [0 2])
 set(gca, 'YTick', [3 10 48])
 set(gca, 'FontName', "Arial")
 set(ax_new, 'YScale', 'log')
-title('baseline - 5HT (n = 51)', 'fontsize', 6, 'fontname', 'Arial')
+title('baseline - 5HT (n = 50)', 'fontsize', 6, 'fontname', 'Arial')
 xlabel('time after stimulus onset (sec)', 'fontsize', 6, 'fontname', 'Arial')
 ylabel('frequency (Hz)', 'fontsize', 6, 'fontname', 'Arial')
 
