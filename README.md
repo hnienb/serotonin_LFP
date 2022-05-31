@@ -33,8 +33,8 @@ Each .mat file includes a struct *ex* with the following information:
     - **vals**: Values of the stimulus type used in the session
   - **e2**: (Optional) Second experiment, same format as *e1*
 - **Trials**: Includes information about trials (see below)
-- **refreshRate**: Refresh rate of the stimulus monitor
-- **VisStimVersion**: (Optional) Some sessions used stimulus presentation version
+- **setup.refreshRate**: Refresh rate of the stimulus monitor
+- **Header.VisStimVersion**: (Optional) Some sessions used stimulus presentation version
   that requires manual adjustment for times
 
 *ex.Trials* contains the following information:
@@ -51,7 +51,9 @@ Each .mat file includes a struct *ex* with the following information:
 - **LFP**: Measured LFP voltage for the trial
 - **LFP_ts**: Time points corresponding to LFP voltages
 - **times_fpOn**: Time (in sec) when fixation point begins presentation
+- **st_seq**: Sequence of stimuli presented during the trial
 - **or_seq**: Sequence of orientation values presented during the trial
+- **co_seq**: Sequence of contrast values presented during the trial
 
 
 
