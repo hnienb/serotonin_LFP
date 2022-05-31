@@ -31,6 +31,19 @@ load([data_path, '/Lfps_pair_nothin_sc/Lfps_rc_sc.mat']);
 anaT = analysis_table(Lfps, 'drug');
 anaT_sc = analysis_table(Lfps_sc, 'sc');
 
+% Remove any c2 files, since its corresponding LFP is the same as c1
+idx = 0;
+for i = 1:length(Lfps.lfplist)
+    if contains(Lfps.lfplist{i}{1}, 'c2')
+        idx = i;
+        break
+    end
+end
+
+anaT.table = anaT.table([1:idx-1,idx+1:end], :);
+anaT.lists = anaT.lists([1:idx-1,idx+1:end], :);
+
+
 %% Plot Gamma Band Scatterplot for drug condition
 
 % Plots scatterplots for the Gamma power between drug condition and baseline
