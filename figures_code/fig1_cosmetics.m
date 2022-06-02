@@ -175,16 +175,16 @@ side_ax.LineWidth = 0.5;
 % Central scatterplot
 
 % Narrow down y-range to exclude outlier point (focus on other data points)
-center_ax.YLim = [-0.25, 0.25];
-center_ax.YTick = [-0.25, 0, 0.25];
+center_ax.YLim = [-0.68, 0.68];
+center_ax.YTick = [-0.68, 0, 0.68];
 
 % Move the group number labels down on the plot after fixing font size
 center_ax.Children(1).FontSize = 6;
 center_ax.Children(4).FontSize = 6;
 center_ax.Children(1).FontName = "Arial";
 center_ax.Children(4).FontName = "Arial";
-center_ax.Children(1).Position(2) = 0.23;
-center_ax.Children(4).Position(2) = 0.18;
+center_ax.Children(1).Position(2) = 0.60;
+center_ax.Children(4).Position(2) = 0.47;
 center_ax.XLabel.FontSize = 6;
 center_ax.YLabel.FontSize = 6;
 center_ax.XLabel.FontName = "Arial";
@@ -217,25 +217,25 @@ center_ax.Children(6).SizeData = 7;
 % Right-side histogram
 
 % Change range to follow central scatterplots y-axis narrowing
-side_ax.XLim = [-0.25, 0.25];
+side_ax.XLim = [-0.68, 0.68];
 
 % Update the histogram bounds and bins to follow narrow 'y'-range
 for i = [5,6]
-    side_ax.Children(i).BinLimits = [-0.25, 0.25];
+    side_ax.Children(i).BinLimits = [-0.68, 0.68];
     side_ax.Children(i).NumBins = 35;
 end
 
 % Scale the 'Counts' axis to reflect the previous changes
-side_ax.YLim = [0 8];
-side_ax.YTick = [8];
+side_ax.YLim = [0 14];
+side_ax.YTick = 14;
 
 % Change the median labels to make uniform with other figures
 for i = [1,3]
     side_ax.Children(i).FontSize = 6;
     side_ax.Children(i).FontName = "Arial";
     side_ax.Children(i).FontWeight = 'normal';
-    side_ax.Children(i).Position(1) = side_ax.Children(i).Position(1) + 0.018*(i-2);
-    side_ax.Children(i).Position(2) = 8;
+    side_ax.Children(i).Position(1) = side_ax.Children(i).Position(1) - 0.055*(i-2);
+    side_ax.Children(i).Position(2) = 15;
 end
 
 % This string says -0.00 (just below 0), so fix this to say 0.00
@@ -244,7 +244,7 @@ side_ax.Children(1).String = '0.00';
 % Reduce the size and position of markers for medians to fit better
 for i = [2,4]
     side_ax.Children(i).MarkerSize = 1;
-    side_ax.Children(i).YData = side_ax.Children(i-1).Position(2) - 1.5;
+    side_ax.Children(i).YData = side_ax.Children(i-1).Position(2) - 2;
 end
 
 
