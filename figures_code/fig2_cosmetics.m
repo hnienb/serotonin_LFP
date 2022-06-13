@@ -1,3 +1,5 @@
+% Converts the Figure 2 subplots into the paper figure.
+
 close all
 
 % Get the 'relative' folder path to get the resource folderpath
