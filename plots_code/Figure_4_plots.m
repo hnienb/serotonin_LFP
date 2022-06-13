@@ -64,7 +64,7 @@ savefig(figHandles(1), [save_path, '/sta_amp_mp.fig'])
 
 %% Plot STA amplitudes (for firing rate control)
 
-% These plots aren't used in the actual figure S1, but the p-values
+% These plots aren't used in the actual figure, but the p-values
 % associated with this information are used
 
 % Plots the amplitudes of each session's STA (for firing rate control)
