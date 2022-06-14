@@ -1,9 +1,9 @@
 # serotonin_LFP
-Custom analysis code for [paper reference]. Serotonergic modulation of local network processing in V1 shares signatures with the modulation by spatial attention, [year]
+Custom analysis code for Patel et al. Serotonergic modulation of local network processing in V1 shares signatures with the modulation by spatial attention, 2022
 
 # Contents
 ## Data
-Source data needed to recreate paper figures
+Source data needed to recreate paper figures - located in the /resources/Data/ folder
 
 MP-processed LFP data is not included due file-size constraints, but it can be
 replicated using the available code (see below).
